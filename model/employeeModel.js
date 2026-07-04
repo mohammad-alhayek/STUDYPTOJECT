@@ -33,10 +33,12 @@ export const getEmployeeByName = async (full_name) => {
 };
 
 // ADD EMPLOYEE
+
 export const addEmployee = async (employee) => {
     const pool = await poolPromise;
 
     await pool.request()
+        .input('id', employee.id) // ⭐ جديد
         .input('user_id', employee.user_id)
         .input('full_name', employee.full_name)
         .input('phone', employee.phone)
@@ -46,10 +48,11 @@ export const addEmployee = async (employee) => {
         .input('address', employee.address)
         .query(`
             INSERT INTO Employees
-            (user_id, full_name, phone, department, salary, hire_date, address, created_at)
+            (id, user_id, full_name, phone, department, salary, hire_date, address, created_at)
             VALUES
-            (@user_id, @full_name, @phone, @department, @salary, @hire_date, @address, GETDATE())
+            (@id, @user_id, @full_name, @phone, @department, @salary, @hire_date, @address, GETDATE())
         `);
+         return employee.id; 
 };
 
 // UPDATE EMPLOYEE
