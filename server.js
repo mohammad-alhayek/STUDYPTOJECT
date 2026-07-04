@@ -9,7 +9,7 @@ import path from 'path';
 import employees from './routes/employees.js';
 //const __dirname=path.resolve();
 const app =express(); //handle all method of express
-
+//ddatabase connect
 
 //************************************get static file *************************************************/
 //without middleware
@@ -17,7 +17,7 @@ const app =express(); //handle all method of express
 // app.get('/',(req,res)=>{
 // res.sendFile(path.join(__dirname,'public','index.html'));
 // }
-// 
+// ()
 
 
 //**************************************** */ middleware****************************************** 
@@ -26,6 +26,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 app.use('/api/employees',employees)
+//users
+//login register logout
 
 
 //**************************************get api************************************************ */

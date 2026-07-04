@@ -1,39 +1,78 @@
-
-
-let employees = [
-    { id: 1, title: 'employe1' },
-    { id: 2, title: 'employe2' },
-    { id: 3, title: 'employee3' }
-];
-
-export const getEmployees=(req, res) => {
-    res.json(employees);
-};
-
-export const getEmployee=(req, res) => {
-    let param = parseInt(req.params.id);
-
-    const emp = employees.find(p => p.id === param);
-
-    if (emp) {
-        res.json(emp);
-    } else {
-        res.status(404).send('error 404');
-    }
-};
-
-export const addEmployee=(req,res)=>
-    {
-        const newEmployee=
-        {
-            id:employees.length+1, title:req.body.title
-
-        }
-        if (newEmployee ) {
-            employees.push(newEmployee);
+import * as employeeModel from '../model/employeeModel.js';
+console.log("employeesController loaded");
+console.log("MODEL:", employeeModel);
+// GET ALL
+export const getEmployees = async (req, res) => {
+    try {
+        const employees = await employeeModel.getAllEmployees();
         res.json(employees);
-    } else {
-        res.status(404).send('error 404');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+};
 
-    };
+// GET BY ID
+export const getEmployee = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+
+        const employee = await employeeModel.getEmployeeById(id);
+
+        if (!employee) {
+            return res.status(404).send("Employee not found");
+        }
+
+        res.json(employee);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// ADD EMPLOYEE
+export const addEmployee = async (req, res) => {
+    try {
+        const employee = req.body;
+
+        await employeeModel.addEmployee(employee);
+
+        res.json({
+            message: "Employee added successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// UPDATE EMPLOYEE
+export const updateEmployee = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const employee = req.body;
+
+        await employeeModel.updateEmployee(id, employee);
+
+        res.json({
+            message: "Employee updated successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// DELETE EMPLOYEE
+export const deleteEmployee = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+
+        await employeeModel.deleteEmployee(id);
+
+        res.json({
+            message: "Employee deleted successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
