@@ -11,17 +11,7 @@ import users from './routes/users.js';
 //const __dirname=path.resolve();
 const app =express(); //handle all method of express
 
-//database connect
-import sql from 'mssql';
-import dbConfig from './config/db.js';
-
-try {
-    await sql.connect(dbConfig);
-    console.log('Database Connected');
-} catch (err) {
-    console.log(err);
-}
-
+import './config/db.js';
 //************************************get static file *************************************************/
 //without middleware
 //open home page and manage req and res
