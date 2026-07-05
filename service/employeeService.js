@@ -1,7 +1,7 @@
 import * as employeeModel from '../model/employeeModel.js';
 import { generateEmployeeId } from '../utils/generateEmployeeId.js';
 
-// GET ALL EMPLOYEES
+// GET ALL EMPLOYEES 
 export const getEmployees = async () => {
     return await employeeModel.getAllEmployees();
 };

@@ -19,7 +19,18 @@ export const getUserById = async (id) => {
 
     return result.recordset[0];
 };
+//get user by email
+export const getUserByEmail = async (email) => {
+    const pool = await poolPromise;
 
+    const result = await pool.request()
+        .input('email', email)
+        .query(`
+            SELECT * FROM Users WHERE email = @email
+        `);
+
+    return result.recordset[0];
+};
 
 // ADD USER
 

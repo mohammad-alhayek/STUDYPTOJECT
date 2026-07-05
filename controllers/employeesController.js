@@ -2,6 +2,14 @@
 import * as employeeService from '../service/employeeService.js';
 console.log("employeesController loaded");
 
+
+
+
+
+
+
+
+
 // GET ALL
 export const getEmployees = async (req, res) => {
     try {
@@ -14,7 +22,7 @@ export const getEmployees = async (req, res) => {
 // GET BY ID
 export const getEmployee = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = (req.params.id);
 
         if (isNaN(id)) {
             return res.status(400).json({

@@ -1,6 +1,28 @@
 import * as userService from '../service/userService.js';
 console.log("usersController loaded");
 
+
+//login
+
+export const login = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { email, password } = req.body;
+
+        const token = await userService.login(email, password);
+
+        res.json({
+            message: "Login successful",
+            token
+        });
+
+    } catch (error) {
+        res.status(401).json({
+            message: error.message
+        });
+    }
+};
+
 // GET ALL
 export const getUsers = async (req, res) => {
     try {
@@ -14,7 +36,7 @@ export const getUsers = async (req, res) => {
 // GET BY ID
 export const getUser = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = (req.params.id);
 
         if (isNaN(id)) {
             return res.status(400).json({
