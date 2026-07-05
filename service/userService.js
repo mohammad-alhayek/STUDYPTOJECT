@@ -1,5 +1,7 @@
 import * as userModel from '../model/userModel.js';
 import { generateUserId } from '../utils/generateEmployeeId.js';
+import bcrypt from "bcrypt";
+
 
 // GET ALL Users
 export const getUsers = async () => {

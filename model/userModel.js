@@ -1,4 +1,5 @@
 import { poolPromise } from '../config/db.js';
+import bcrypt from "bcrypt";
 // GET ALL
 export const getAllUsers = async () => {
     const pool = await poolPromise;
@@ -25,14 +26,15 @@ export const getUserById = async (id) => {
 
 export const addUser = async (user) => {
     const pool = await poolPromise;
+    const hashedPassword = await bcrypt.hash(user.password, 10);
 
     await pool.request()
         .input('id', user.id) 
         .input('email', user.email)
         .input('full_name', user.full_name)
-        .input('password', user.password)
+        .input("password", hashedPassword)
         .input('is_active', user.is_active)
-        .input('last_login', user.last_login)
+        .input('last_login', user.last_login|| null)
         .query(`
             INSERT INTO Users
             (id, email, full_name, password, is_active, last_login)
@@ -46,25 +48,31 @@ export const addUser = async (user) => {
 export const updateUser = async (id, user) => {
     const pool = await poolPromise;
 
-     await pool.request()
-        .input('id', id) 
+    let hashedPassword = user.password;
+
+    if (user.password) {
+        hashedPassword = await bcrypt.hash(user.password, 10);
+    }
+
+    await pool.request()
+        .input('id', id)
         .input('email', user.email)
         .input('full_name', user.full_name)
-        .input('password', user.password)
+        .input('password', hashedPassword)
         .input('is_active', user.is_active)
-        .input('last_login', user.last_login)
+        .input('last_login', user.last_login|| null)
         .query(`
             UPDATE Users
             SET
-    
-             id=@id,
-             email=@email, 
-             full_name=@full_name,
-            password=@password,
-            is_active=@is_active,
-            last_login=@last_login
+                email = @email,
+                full_name = @full_name,
+                password = @password,
+                is_active = @is_active,
+                last_login = @last_login
             WHERE id = @id
         `);
+                 return id; 
+
 };
 
 // DELETE user
