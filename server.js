@@ -7,9 +7,20 @@
 import express from 'express';
 import path from 'path';
 import employees from './routes/employees.js';
+import users from './routes/users.js';
 //const __dirname=path.resolve();
 const app =express(); //handle all method of express
-//ddatabase connect
+
+//database connect
+import sql from 'mssql';
+import dbConfig from './config/db.js';
+
+try {
+    await sql.connect(dbConfig);
+    console.log('Database Connected');
+} catch (err) {
+    console.log(err);
+}
 
 //************************************get static file *************************************************/
 //without middleware
@@ -17,7 +28,7 @@ const app =express(); //handle all method of express
 // app.get('/',(req,res)=>{
 // res.sendFile(path.join(__dirname,'public','index.html'));
 // }
-// ()
+// 
 
 
 //**************************************** */ middleware****************************************** 
@@ -26,8 +37,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 app.use('/api/employees',employees)
-//users
-//login register logout
+app.use('/api/users',users)
+
 
 
 //**************************************get api************************************************ */
