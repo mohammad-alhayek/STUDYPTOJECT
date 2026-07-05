@@ -12,7 +12,7 @@ export const generateEmployeeId = () => {
     return `${prefix}-${year}-${randomPart}`;
 };
 export const generateUserId = () => {
-    const prefix = "EMP";
+    const prefix = "USR";
     const year = new Date().getFullYear();
 
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

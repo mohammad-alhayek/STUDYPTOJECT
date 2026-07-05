@@ -23,13 +23,13 @@ export const getUserById = async (id) => {
 
 // ADD USER
 
-export const addEmployee = async (user) => {
+export const addUser = async (user) => {
     const pool = await poolPromise;
 
     await pool.request()
         .input('id', user.id) 
         .input('email', user.email)
-        .input('full_name', employee.full_name)
+        .input('full_name', user.full_name)
         .input('password', user.password)
         .input('is_active', user.is_active)
         .input('last_login', user.last_login)
@@ -39,17 +39,17 @@ export const addEmployee = async (user) => {
             VALUES
             (@id, @email, @full_name, @password, @is_active, @last_login)
         `);
-         return users.id; 
+         return user.id; 
 };
 
 // UPDATE USER
-export const updateEmployee = async (id, employee) => {
+export const updateUser = async (id, user) => {
     const pool = await poolPromise;
 
      await pool.request()
-        .input('id', user.id) 
+        .input('id', id) 
         .input('email', user.email)
-        .input('full_name', employee.full_name)
+        .input('full_name', user.full_name)
         .input('password', user.password)
         .input('is_active', user.is_active)
         .input('last_login', user.last_login)
@@ -58,11 +58,11 @@ export const updateEmployee = async (id, employee) => {
             SET
     
              id=@id,
-             email@email, 
+             email=@email, 
              full_name=@full_name,
             password=@password,
             is_active=@is_active,
-            last_login=@last_login)
+            last_login=@last_login
             WHERE id = @id
         `);
 };
