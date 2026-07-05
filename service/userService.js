@@ -1,7 +1,36 @@
 import * as userModel from '../model/userModel.js';
 import { generateUserId } from '../utils/generateEmployeeId.js';
+import bcrypt from "bcrypt";
 
+//login
+export const login = async (email, password) => {
 
+    
+    const user = await userModel.getUserByEmail(email);
+
+    if (!user) {
+        throw new Error("Invalid email ");
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+        throw new Error("Invalid  password");
+    }
+
+    // 3. نعمل JWT Token
+    const token = jwt.sign(
+        {
+            id: user.id,
+            email: user.email
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+    );
+
+    // 4. نرجع التوكن
+    return token;
+};
 
 
 // GET ALL Users
