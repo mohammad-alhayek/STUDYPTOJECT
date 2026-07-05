@@ -14,27 +14,26 @@ export const getUsers = async (req, res) => {
 // GET BY ID
 export const getUser = async (req, res) => {
     try {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(400).json({
-                message: "Invalid user ID"
-            });
-        }
+        const id = req.params.id;
 
         const user = await userService.getUserById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
 
         res.json(user);
 
     } catch (error) {
-
-        if (error.message === "User not found") {
-            return res.status(404).json({ message: error.message });
-        }
-
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message
+        });
     }
-};
+};   
+    
+
 
 // ADD USER
 export const addUser = async (req, res) => {
@@ -56,14 +55,9 @@ export const addUser = async (req, res) => {
 // UPDATE USER
 export const updateUser = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = (req.params.id);
         const user = req.body;
 
-        if (isNaN(id)) {
-            return res.status(400).json({
-                message: "Invalid user ID"
-            });
-        }
 
         await userService.updateUser(id, user);
 
@@ -79,13 +73,9 @@ export const updateUser = async (req, res) => {
 // DELETE USER
 export const deleteUser = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = (req.params.id);
 
-        if (isNaN(id)) {
-            return res.status(400).json({
-                message: "Invalid user ID"
-            });
-        }
+       
 
         await userService.deleteUser(id);
 

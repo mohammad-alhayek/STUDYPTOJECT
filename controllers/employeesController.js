@@ -14,13 +14,9 @@ export const getEmployees = async (req, res) => {
 // GET BY ID
 export const getEmployee = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = (req.params.id);
 
-        if (isNaN(id)) {
-            return res.status(400).json({
-                message: "Invalid employee ID"
-            });
-        }
+       
 
         const employee = await employeeService.getEmployeeById(id);
 
@@ -55,14 +51,10 @@ export const addEmployee = async (req, res) => {
 // UPDATE EMPLOYEE
 export const updateEmployee = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = (req.params.id);
         const employee = req.body;
 
-        if (isNaN(id)) {
-            return res.status(400).json({
-                message: "Invalid employee ID"
-            });
-        }
+       
 
         await employeeService.updateEmployee(id, employee);
 
@@ -78,13 +70,9 @@ export const updateEmployee = async (req, res) => {
 // DELETE EMPLOYEE
 export const deleteEmployee = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = (req.params.id);
 
-        if (isNaN(id)) {
-            return res.status(400).json({
-                message: "Invalid employee ID"
-            });
-        }
+     
 
         await employeeService.deleteEmployee(id);
 
