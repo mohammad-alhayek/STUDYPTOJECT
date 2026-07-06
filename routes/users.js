@@ -1,12 +1,11 @@
 
 import express from 'express';
-import{addUser,getUser, getUsers,deleteUser,updateUser,login}from '../controllers/usersController.js';
+import{addUser,getUser, getUsers,deleteUser,updateUser}from '../controllers/usersController.js';
 import { loginLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
-//Login
-router.post('/login',loginLimiter, login);
+
 
 
 // get all posts

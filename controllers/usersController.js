@@ -2,26 +2,6 @@ import * as userService from '../service/userService.js';
 console.log("usersController loaded");
 
 
-//login
-
-export const login = async (req, res) => {
-    try {
-        console.log(req.body);
-        const { email, password } = req.body;
-
-        const token = await userService.login(email, password);
-
-        res.json({
-            message: "Login successful",
-            token
-        });
-
-    } catch (error) {
-        res.status(401).json({
-            message: error.message
-        });
-    }
-};
 
 // GET ALL
 export const getUsers = async (req, res) => {

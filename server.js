@@ -6,8 +6,9 @@
 //after add type module in package json
 import express from 'express';
 import path from 'path';
-import employees from './routes/employees.js';
-import users from './routes/users.js';
+import routes from './routes/index.js';
+
+
 //const __dirname=path.resolve();
 const app =express(); //handle all method of express
 
@@ -23,12 +24,12 @@ import './config/db.js';
 
 //**************************************** */ middleware****************************************** 
 //app.use(express.static(path.join(__dirname,'public')))
+
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
-app.use('/api/employees',employees)
-app.use('/api/users',users)
-
+// routs
+app.use('/api', routes);
 
 
 //**************************************get api************************************************ */

@@ -83,3 +83,19 @@ export const deleteUser = async (id) => {
             WHERE id = @id
         `);
 };
+
+// CREATE USER
+export const createUser = async (user) => {
+    const pool = await poolPromise;
+
+    await pool.request()
+        .input('id', user.id)
+        .input('email', user.email)
+        .input('password', user.password)
+        .query(`
+            INSERT INTO Users (id, email, password)
+            VALUES (@id, @email, @password)
+        `);
+
+    return { id: user.id, email: user.email };
+};
