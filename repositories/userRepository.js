@@ -1,101 +1,60 @@
-import { poolPromise } from "../config/db.js";
+// repositories/userRepository.js
+import User from '../model/userModel.js';
 
+// GET ALL Users
 export const getAllUsers = async () => {
-    const pool = await poolPromise;
-
-    const result = await pool.request()
-        .query("SELECT * FROM Users");
-
-    return result.recordset;
+    return await User.findAll(); 
 };
 
+// GET USER BY ID
 export const getUserById = async (id) => {
-    const pool = await poolPromise;
-
-    const result = await pool.request()
-        .input("id", id)
-        .query("SELECT * FROM Users WHERE id = @id");
-
-    return result.recordset[0];
+    if (!id) {
+        throw new Error("User ID is required");
+    }
+    return await User.findByPk(id); 
 };
 
+// GET USER BY EMAIL
 export const getUserByEmail = async (email) => {
-    const pool = await poolPromise;
-
-    const result = await pool.request()
-        .input("email", email)
-        .query("SELECT * FROM Users WHERE email = @email");
-
-    return result.recordset[0];
+    return await User.findOne({ 
+        where: { email: email } 
+    });
 };
 
+// ADD USER
 export const addUser = async (user) => {
-    const pool = await poolPromise;
-
-    await pool.request()
-        .input("id", user.id)
-        .input("email", user.email)
-        .input("full_name", user.full_name)
-        .input("password", user.password)
-        .input("is_active", user.is_active)
-        .input("last_login", user.last_login || null)
-        .query(`
-            INSERT INTO Users
-            (id, email, full_name, password, is_active, last_login)
-            VALUES
-            (@id, @email, @full_name, @password, @is_active, @last_login)
-        `);
-
-    return user.id;
+    const createdUser = await User.create(user); 
+    return createdUser.id;
 };
 
+// UPDATE USER
 export const updateUser = async (id, user) => {
-    const pool = await poolPromise;
-
-    await pool.request()
-        .input("id", id)
-        .input("email", user.email)
-        .input("full_name", user.full_name)
-        .input("password", user.password)
-        .input("is_active", user.is_active)
-        .input("last_login", user.last_login || null)
-        .query(`
-            UPDATE Users
-            SET
-                email = @email,
-                full_name = @full_name,
-                password = @password,
-                is_active = @is_active,
-                last_login = @last_login
-            WHERE id = @id
-        `);
-
+    if (!id) {
+        throw new Error("User ID is required");
+    }
+    
+    await User.update(user, {
+        where: { id: id }
+    });
     return id;
 };
 
+// DELETE USER
 export const deleteUser = async (id) => {
-    const pool = await poolPromise;
+    if (!id) {
+        throw new Error("User ID is required");
+    }
 
-    await pool.request()
-        .input("id", id)
-        .query(`
-            DELETE FROM Users
-            WHERE id = @id
-        `);
+    await User.destroy({
+        where: { id: id }
+    });
 };
 
 // CREATE USER
 export const createUser = async (user) => {
-    const pool = await poolPromise;
-
-    await pool.request()
-        .input('id', user.id)
-        .input('email', user.email)
-        .input('password', user.password)
-        .query(`
-            INSERT INTO Users (id, email, password)
-            VALUES (@id, @email, @password)
-        `);
-
-    return { id: user.id, email: user.email };
+    const createdUser = await User.create(user);
+    return { 
+        id: createdUser.id, 
+        email: createdUser.email 
+    };
 };

@@ -1,86 +1,50 @@
-import { poolPromise } from "../config/db.js";
+// repositories/employeeRepository.js
+import Employee from '../model/employeeModel.js';
 
+// GET ALL Employees
 export const getAllEmployees = async () => {
-    const pool = await poolPromise;
-
-    const result = await pool.request()
-        .query("SELECT * FROM Employees");
-
-    return result.recordset;
+    return await Employee.findAll();
 };
 
+// GET EMPLOYEE BY ID
 export const getEmployeeById = async (id) => {
-    const pool = await poolPromise;
-
-    const result = await pool.request()
-        .input("id", id)
-        .query("SELECT * FROM Employees WHERE id = @id");
-
-    return result.recordset[0];
+    if (!id) {
+        throw new Error("Employee ID is required");
+    }
+    return await Employee.findByPk(id);
 };
 
+// GET EMPLOYEE BY NAME 
 export const getEmployeeByName = async (full_name) => {
-    const pool = await poolPromise;
-
-    const result = await pool.request()
-        .input("full_name", full_name)
-        .query("SELECT * FROM Employees WHERE full_name = @full_name");
-
-    return result.recordset;
+    return await Employee.findAll({
+        where: { full_name: full_name }
+    });
 };
 
+// ADD EMPLOYEE
 export const addEmployee = async (employee) => {
-    const pool = await poolPromise;
-
-    await pool.request()
-        .input("id", employee.id)
-        .input("user_id", employee.user_id)
-        .input("full_name", employee.full_name)
-        .input("phone", employee.phone)
-        .input("department", employee.department)
-        .input("salary", employee.salary)
-        .input("hire_date", employee.hire_date)
-        .input("address", employee.address)
-        .query(`
-            INSERT INTO Employees
-            (id, user_id, full_name, phone, department, salary, hire_date, address, created_at)
-            VALUES
-            (@id, @user_id, @full_name, @phone, @department, @salary, @hire_date, @address, GETDATE())
-        `);
-
-    return employee.id;
+    // Sequelize بيتعامل مع التواريخ تلقائياً بناءً على الـ timestamps اللي حددناها بالموديل
+    const createdEmployee = await Employee.create(employee);
+    return createdEmployee.id;
 };
 
+// UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
-    const pool = await poolPromise;
-
-    await pool.request()
-        .input("id", id)
-        .input("user_id", employee.user_id)
-        .input("full_name", employee.full_name)
-        .input("phone", employee.phone)
-        .input("department", employee.department)
-        .input("salary", employee.salary)
-        .input("hire_date", employee.hire_date)
-        .input("address", employee.address)
-        .query(`
-            UPDATE Employees
-            SET
-                user_id = @user_id,
-                full_name = @full_name,
-                phone = @phone,
-                department = @department,
-                salary = @salary,
-                hire_date = @hire_date,
-                address = @address
-            WHERE id = @id
-        `);
+    if (!id) {
+        throw new Error("Employee ID is required");
+    }
+    await Employee.update(employee, {
+        where: { id: id }
+    });
+    return id;
 };
 
+// DELETE EMPLOYEE
 export const deleteEmployee = async (id) => {
-    const pool = await poolPromise;
-
-    await pool.request()
-        .input("id", id)
-        .query("DELETE FROM Employees WHERE id = @id");
+    if (!id) {
+        throw new Error("Employee ID is required");
+    }
+    await Employee.destroy({
+        where: { id: id }
+    });
 };
