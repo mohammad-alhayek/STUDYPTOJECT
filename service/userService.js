@@ -1,4 +1,5 @@
-import * as userModel from '../model/userModel.js';
+//import * as userModel from '../model/userModel.js';
+import * as userModel from '../repositories/userRepository.js';
 import { generateUserId } from '../utils/generateEmployeeId.js';
 import bcrypt from "bcrypt";
 
