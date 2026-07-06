@@ -1,10 +1,8 @@
-import * as userModel from '../model/userModel.js';
+//import * as userModel from '../model/userModel.js';
+import * as userModel from '../repositories/userRepository.js';
 import { generateUserId } from '../utils/generateEmployeeId.js';
 import bcrypt from "bcrypt";
-<<<<<<< HEAD
-import jwt from 'jsonwebtoken';
-=======
->>>>>>> ed91c9a617a8c0850a4cd75e01554631bba62c9b
+import jwt from "jsonwebtoken";
 
 //login
 export const login = async (email, password) => {

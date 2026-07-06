@@ -1,4 +1,5 @@
-import * as employeeModel from '../model/employeeModel.js';
+//import * as employeeModel from '../model/employeeModel.js';
+import * as employeeModel from '../repositories/employeeRepository.js';
 import { generateEmployeeId } from '../utils/generateEmployeeId.js';
 
 // GET ALL EMPLOYEES 
