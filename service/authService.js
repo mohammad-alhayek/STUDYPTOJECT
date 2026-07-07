@@ -44,7 +44,7 @@ export const register = async (user) => {
 
     // 3. build new user object
     const newUser = {
-        id:generateUserId(),
+    
         email: user.email,
         password: hashedPassword,
         full_name: user.full_name,

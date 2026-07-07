@@ -23,9 +23,11 @@ export const getEmployeeByName = async (full_name) => {
 
 // ADD EMPLOYEE
 export const addEmployee = async (employee) => {
-    // Sequelize بيتعامل مع التواريخ تلقائياً بناءً على الـ timestamps اللي حددناها بالموديل
+
     const createdEmployee = await Employee.create(employee);
-    return createdEmployee.id;
+
+    return createdEmployee;
+
 };
 
 // UPDATE EMPLOYEE

@@ -1,10 +1,11 @@
 //import * as employeeModel from '../model/employeeModel.js';
-import * as employeeModel from '../repositories/employeeRepository.js';
+import * as employeeRepos from '../repositories/employeeRepository.js';
 import { generateEmployeeId } from '../utils/generateEmployeeId.js';
+
 
 // GET ALL EMPLOYEES 
 export const getEmployees = async () => {
-    return await employeeModel.getAllEmployees();
+    return await employeeRepos.getAllEmployees();
 };
 
 // GET EMPLOYEE BY ID
@@ -14,7 +15,7 @@ export const getEmployeeById = async (id) => {
         throw new Error("Employee ID is required");
     }
 
-    const employee = await employeeModel.getEmployeeById(id);
+    const employee = await employeeRepos.getEmployeeById(id);
 
     if (!employee) {
         throw new Error("Employee not found");
@@ -26,15 +27,26 @@ export const getEmployeeById = async (id) => {
 // ADD EMPLOYEE
 export const addEmployee = async (employee) => {
 
-    
-    const id = generateEmployeeId();
-
     const newEmployee = {
-        id,
-        ...employee
+        user_id: employee.user_id,
+        full_name: employee.full_name,
+        phone: employee.phone,
+        department: employee.department,
+        salary: employee.salary,
+        hire_date: employee.hire_date,
+        address: employee.address
     };
 
-    return await employeeModel.addEmployee(newEmployee);
+    console.log(newEmployee);
+
+    const createdEmployee = await employeeRepos.addEmployee(newEmployee);
+
+    console.log(createdEmployee);
+    return {
+        id: createdEmployee.id,
+        full_name: createdEmployee.full_name,
+        user_id: createdEmployee.user_id
+    };
 };
 // UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
@@ -48,7 +60,7 @@ export const updateEmployee = async (id, employee) => {
         throw new Error("Employee name is required");
     }
 
-    return await employeeModel.updateEmployee(id, employee);
+    return await employeeRepos.updateEmployee(id, employee);
 };
 // DELETE EMPLOYEE
 export const deleteEmployee = async (id) => {
@@ -57,7 +69,7 @@ export const deleteEmployee = async (id) => {
         throw new Error("Employee ID is required");
     }
 
-    const existing = await employeeModel.getEmployeeById(id);
+    const existing = await employeeRepos.getEmployeeById(id);
 
     if (!existing) {
         throw new Error("Employee not found");

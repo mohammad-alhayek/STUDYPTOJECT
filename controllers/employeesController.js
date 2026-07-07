@@ -42,17 +42,20 @@ export const getEmployee = async (req, res) => {
 // ADD EMPLOYEE
 export const addEmployee = async (req, res) => {
     try {
+
         const employee = req.body;
 
-        const id = await employeeService.addEmployee(employee);
+        const result = await employeeService.addEmployee(employee);
 
-        res.json({
+        res.status(201).json({
             message: "Employee added successfully",
-            id: id
+            data: result
         });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 

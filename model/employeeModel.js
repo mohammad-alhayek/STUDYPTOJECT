@@ -2,11 +2,12 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.js';
 
 const Employee = sequelize.define('Employee', {
-    id: {
-        type: DataTypes.STRING(36), 
-        primaryKey: true,
-        allowNull: false    
-    },
+ id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+    allowNull: false
+},
     user_id: {
         type: DataTypes.STRING(36), 
         allowNull: false 
@@ -37,7 +38,7 @@ const Employee = sequelize.define('Employee', {
     }
 }, {
     tableName: 'Employees', 
-    timestamps: true,      
+    timestamps: false,      
     createdAt: 'created_at', 
     updatedAt: false          
 });
