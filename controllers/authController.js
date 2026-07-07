@@ -17,7 +17,6 @@ export const login = async (req, res) => {
         });
     }
 };
-// REGISTER
 export const register = async (req, res) => {
     try {
         const user = req.body;
@@ -30,6 +29,9 @@ export const register = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
+        console.log(error.original);
+
         res.status(400).json({
             message: error.message
         });

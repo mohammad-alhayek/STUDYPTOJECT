@@ -12,7 +12,7 @@ export const sequelize = new Sequelize(
     host: process.env.DB_SERVER,
     dialect: "mssql",
     dialectModule: tedious,
-    logging: false,
+    logging: console.log,
     dialectOptions: {
       options: {
         encrypt: false,

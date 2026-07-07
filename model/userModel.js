@@ -30,11 +30,11 @@ const User = sequelize.define('User', {
         field: 'full_Name', // لضمان مطابقة الـ Capitalization بحرف N الكبير كما هو بقاعدتك
         allowNull: true // Checked
     }
-}, {
-    tableName: 'Users',      // اسم الجدول في قاعدة البيانات
-    timestamps: true,        // لتفعيل الـ Timestamps تلقائياً
-    createdAt: 'created_at', // يربط حقل الـ created_at بالـ database تلقائياً
-    updatedAt: false         // إلغاء الـ updatedAt لعدم وجودها بالجدول
+},
+  {
+     tableName: 'Users',     
+     timestamps: false,       
+     createdAt: 'created_at',     updatedAt: false        
 });
 
 export default User;

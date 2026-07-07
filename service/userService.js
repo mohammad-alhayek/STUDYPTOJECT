@@ -1,5 +1,7 @@
 //import * as userModel from '../model/userModel.js';
 import * as userModel from '../repositories/userRepository.js';
+import { generateEmployeeId, generateUserId } from '../utils/generateEmployeeId.js';
+
 
 
 // GET ALL Users

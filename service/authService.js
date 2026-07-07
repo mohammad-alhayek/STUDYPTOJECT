@@ -43,15 +43,13 @@ export const register = async (user) => {
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
     // 3. build new user object
-    const newUser = {
-        id:generateUserId(),
-        email: user.email,
-        password: hashedPassword,
-        full_name: user.full_name,
-        is_active: 1,
-        created_at: new Date(),
-        last_login: null
-    };
+   const newUser = {
+    id: generateUserId(),
+    email: user.email,
+    password: hashedPassword,
+    full_name: user.full_name,
+    is_active: 1
+};
 
     // 4. save to DB
     const createdUser = await userRepository.createUser(newUser);
@@ -60,6 +58,5 @@ export const register = async (user) => {
     return {
         id: createdUser.id,
         email: createdUser.email,
-        full_name: createdUser.full_name
     };
 };
