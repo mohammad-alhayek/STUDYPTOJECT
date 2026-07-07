@@ -49,17 +49,21 @@ export const register = async (user) => {
         password: hashedPassword,
         full_name: user.full_name,
         is_active: 1,
-        created_at: new Date(),
+       // created_at: new Date(),
         last_login: null
     };
+   console.log(newUser);
 
     // 4. save to DB
     const createdUser = await userRepository.createUser(newUser);
+console.log(createdUser);
 
     // 5. return safe response
     return {
         id: createdUser.id,
         email: createdUser.email,
-        full_name: createdUser.full_name
+        
+
+
     };
 };
