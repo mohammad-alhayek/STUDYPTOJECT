@@ -2,44 +2,45 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.js';
 
 const Employee = sequelize.define('Employee', {
-    id: {
-        type: DataTypes.STRING(36), // varchar(36)
-        primaryKey: true,
-        allowNull: false // Unchecked تعني إجباري
-    },
+ id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+    allowNull: false
+},
     user_id: {
-        type: DataTypes.STRING(36), // varchar(36)
-        allowNull: false // Unchecked
+        type: DataTypes.STRING(36), 
+        allowNull: false 
     },
     full_name: {
-        type: DataTypes.STRING(100), // varchar(100)
-        allowNull: false // Unchecked
+        type: DataTypes.STRING(100), 
+        allowNull: false 
     },
     phone: {
-        type: DataTypes.STRING(20), // varchar(20)
-        allowNull: true // Checked تعني اختياري (NULL)
+        type: DataTypes.STRING(20), 
+        allowNull: true 
     },
     department: {
-        type: DataTypes.STRING(100), // varchar(100)
-        allowNull: true // Checked
+        type: DataTypes.STRING(100), 
+        allowNull: true 
     },
     salary: {
-        type: DataTypes.DECIMAL(10, 2), // decimal(10,2)
-        allowNull: true // Checked
+        type: DataTypes.DECIMAL(10, 2), 
+        allowNull: true 
     },
     hire_date: {
-        type: DataTypes.DATEONLY, // date (بدون وقت بالـ Sequelize بنستعمل DATEONLY)
-        allowNull: true // Checked
+        type: DataTypes.DATEONLY, 
+        allowNull: true 
     },
     address: {
-        type: DataTypes.TEXT, // text
-        allowNull: true // Checked
+        type: DataTypes.TEXT, 
+        allowNull: true 
     }
 }, {
-    tableName: 'Employees', // اسم الجدول الفعلي في قاعدة البيانات عندك
-    timestamps: true,       // لتفعيل الـ Timestamps تلقائياً
-    createdAt: 'created_at', // ربط حقل الـ created_at بالـ database
-    updatedAt: false         // طالما مش موجود بالـ database عندك بنلغيه
+    tableName: 'Employees', 
+    timestamps: false,      
+    createdAt: 'created_at', 
+    updatedAt: false          
 });
 
 export default Employee;

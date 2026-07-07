@@ -55,6 +55,8 @@ export const createUser = async (user) => {
     const createdUser = await User.create(user);
     return { 
         id: createdUser.id, 
-        email: createdUser.email 
+        email: createdUser.email ,
+ 
+
     };
 };
