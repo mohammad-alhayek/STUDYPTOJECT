@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
 export const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -20,7 +19,7 @@ export const sequelize = new Sequelize(
         trustServerCertificate: true,
       },
     },
-  }
+  },
 );
 
 export const connectDB = async () => {
