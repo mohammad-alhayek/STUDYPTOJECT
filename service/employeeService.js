@@ -1,4 +1,3 @@
-//import * as employeeModel from '../model/employeeModel.js';
 import * as employeeRepos from "../repositories/employeeRepository.js";
 import { generateEmployeeId } from "../utils/generateEmployeeId.js";
 
@@ -47,7 +46,6 @@ export const addEmployee = async (employee) => {
 };
 // UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
-  // 🧠 هنا مكان الـ business logic (لاحقاً)
   if (!id) {
     throw new Error("Employee ID is required");
   }

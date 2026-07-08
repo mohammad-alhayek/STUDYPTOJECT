@@ -48,7 +48,6 @@ export const register = async (user) => {
     password: hashedPassword,
     full_name: user.full_name,
     is_active: 1,
-    // created_at: new Date(),
     last_login: null,
   };
   console.log(newUser);
