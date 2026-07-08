@@ -1,3 +1,4 @@
+// repositories/authRepository.js
 import User from "../model/userModel.js";
 
 // CREATE USER

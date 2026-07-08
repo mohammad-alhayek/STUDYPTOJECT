@@ -1,7 +1,10 @@
 import * as userRepository from "../repositories/userRepository.js";
-import * as refreshTokenRepository from "../repositories/refreshTokenRepository.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {
+  generateEmployeeId,
+  generateUserId,
+} from "../utils/generateEmployeeId.js";
 
 export const login = async (email, password) => {
   const user = await userRepository.getUserByEmail(email);
@@ -16,47 +19,16 @@ export const login = async (email, password) => {
     throw new Error("Invalid password");
   }
 
-  const accessToken = jwt.sign(
+  const token = jwt.sign(
     {
       id: user.id,
       email: user.email,
     },
     process.env.JWT_SECRET,
-    {
-      expiresIn: "15m",
-    },
+    { expiresIn: "1h" },
   );
 
-  const refreshToken = jwt.sign(
-    {
-      id: user.id,
-    },
-    process.env.JWT_REFRESH_SECRET,
-    {
-      expiresIn: "7d",
-    },
-  );
-
-  await refreshTokenRepository.createRefreshToken({
-    user_id: user.id,
-    token: refreshToken,
-    expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  });
-
-  return {
-    accessToken,
-    refreshToken,
-  };
-};
-
-export const logout = async (refreshToken) => {
-  if (!refreshToken) {
-    throw new Error("Refresh token is required");
-  }
-
-  await refreshTokenRepository.deleteRefreshToken(refreshToken);
-
-  return true;
+  return token;
 };
 
 export const register = async (user) => {

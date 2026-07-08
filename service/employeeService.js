@@ -47,6 +47,7 @@ export const addEmployee = async (employee) => {
 };
 // UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
+  // 🧠 هنا مكان الـ business logic (لاحقاً)
   if (!id) {
     throw new Error("Employee ID is required");
   }

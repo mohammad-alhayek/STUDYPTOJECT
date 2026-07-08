@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Sequelize } from "sequelize"; // أضفنا Sequelize هنا لاستخدام دالة GETDATE
 import { sequelize } from "../config/db.js";
 
 const User = sequelize.define(
@@ -24,11 +24,12 @@ const User = sequelize.define(
       allowNull: true,
       defaultValue: 1,
     },
+    // تم إضافة الحقل هنا بالمكان الصحيح ⬇️
     created_at: {
       type: DataTypes.DATE,
       allowNull: true,
       field: "created_at",
-      defaultValue: Sequelize.literal("GETDATE()"),
+      defaultValue: Sequelize.literal("GETDATE()"), // يطلب الوقت مباشرة من ساعة الـ SQL Server بالصيغة الصحيحة
     },
     last_login: {
       type: DataTypes.DATE,
@@ -43,7 +44,7 @@ const User = sequelize.define(
   },
   {
     tableName: "Users",
-    timestamps: false,
+    timestamps: false, // 👈 غيرناها لـ false لأننا عرّفنا الـ created_at يدويًا فوق لحل مشكلة الـ Conversion
   },
 );
 

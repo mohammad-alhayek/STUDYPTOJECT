@@ -34,6 +34,7 @@ export const addUser = async (user) => {
 };
 // UPDATE USER
 export const updateUser = async (id, user) => {
+  // 🧠 هنا مكان الـ business logic (لاحقاً)
   if (!id) {
     throw new Error("User ID is required");
   }
