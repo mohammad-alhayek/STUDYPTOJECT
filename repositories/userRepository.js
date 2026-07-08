@@ -21,12 +21,6 @@ export const getUserByEmail = async (email) => {
   });
 };
 
-// ADD USER
-export const addUser = async (user) => {
-  const createdUser = await User.create(user);
-  return createdUser.id;
-};
-
 // UPDATE USER
 export const updateUser = async (id, user) => {
   if (!id) {

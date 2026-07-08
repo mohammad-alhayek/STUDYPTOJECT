@@ -1,5 +1,4 @@
 import * as employeeRepos from "../repositories/employeeRepository.js";
-import { generateEmployeeId } from "../utils/generateEmployeeId.js";
 
 // GET ALL EMPLOYEES
 export const getEmployees = async () => {
@@ -68,5 +67,5 @@ export const deleteEmployee = async (id) => {
     throw new Error("Employee not found");
   }
 
-  return await employeeModel.deleteEmployee(id);
+  return await employeeRepos.deleteEmployee(id);
 };

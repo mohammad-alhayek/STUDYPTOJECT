@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  addUser,
   getUser,
   getUsers,
   deleteUser,
@@ -15,8 +14,6 @@ router.get("/", getUsers);
 // get single post
 router.get("/:id", getUser);
 
-//add post
-router.post("/", addUser);
 // update
 router.put("/:id", updateUser);
 

@@ -20,17 +20,6 @@ export const getUserById = async (id) => {
   return user;
 };
 
-// ADD USER
-export const addUser = async (user) => {
-  const id = generateUserId();
-
-  const newUser = {
-    id,
-    ...user,
-  };
-
-  return await userModel.addUser(newUser);
-};
 // UPDATE USER
 export const updateUser = async (id, user) => {
   if (!id) {

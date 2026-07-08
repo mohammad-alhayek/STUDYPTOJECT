@@ -32,22 +32,6 @@ export const getUser = async (req, res) => {
   }
 };
 
-// ADD USER
-export const addUser = async (req, res) => {
-  try {
-    const user = req.body;
-
-    const id = await userService.addUser(user);
-
-    res.json({
-      message: "User added successfully",
-      id: id,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 // UPDATE USER
 export const updateUser = async (req, res) => {
   try {

@@ -1,10 +1,6 @@
 import * as userRepository from "../repositories/userRepository.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {
-  generateEmployeeId,
-  generateUserId,
-} from "../utils/generateEmployeeId.js";
 
 export const login = async (email, password) => {
   const user = await userRepository.getUserByEmail(email);
