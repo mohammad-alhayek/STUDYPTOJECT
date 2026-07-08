@@ -4,14 +4,30 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const token = await authService.login(email, password);
+    const tokens = await authService.login(email, password);
 
     res.json({
       message: "Login successful",
-      token,
+      data: tokens,
     });
   } catch (error) {
     res.status(401).json({
+      message: error.message,
+    });
+  }
+};
+//logout
+export const logout = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    await authService.logout(refreshToken);
+
+    res.json({
+      message: "Logout successful",
+    });
+  } catch (error) {
+    res.status(400).json({
       message: error.message,
     });
   }
