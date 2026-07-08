@@ -1,0 +1,18 @@
+info:
+  name: deleteUser
+  type: http
+  seq: 9
+
+http:
+  method: DELETE
+  url: http://localhost:3000/api/users/974d52fd-ba3e-4286-bdd2-a8ddcf3ce65b
+  body:
+    type: json
+    data: "{}"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
