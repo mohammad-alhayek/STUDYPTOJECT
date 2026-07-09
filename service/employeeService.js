@@ -21,10 +21,6 @@ export const getEmployeeById = async (id) => {
     throw new AppError("EMPLOYEE_NOT_FOUND", 404);
   }
 
-  if (!employee) {
-    throw new Error("Employee not found");
-  }
-
   return employee;
 };
 
