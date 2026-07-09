@@ -1,0 +1,151 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+  background-color: #f0f2f5;
+  color: #333;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+}
+h2 {
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+h3 {
+  margin-bottom: 15px;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 14px;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+input:focus {
+  border-color: #1a73e8;
+}
+.btn {
+  width: 100%;
+  padding: 11px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn:hover {
+  background-color: #1557b0;
+}
+.btn-secondary {
+  background: #5f6368;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-danger {
+  background-color: #d93025;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.switch-form {
+  margin-top: 15px;
+  font-size: 14px;
+  text-align: center;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 15px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.nav-links a {
+  text-decoration: none;
+  color: #5f6368;
+  margin-right: 20px;
+  font-weight: bold;
+}
+.nav-links a.active {
+  color: #1a73e8;
+  border-bottom: 2px solid #1a73e8;
+  padding-bottom: 5px;
+}
+.main-content {
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+.form-inline form {
+  display: flex;
+  gap: 10px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 25px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.data-table th,
+.data-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+.data-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+.btn-edit {
+  background: #34a853;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+.btn-delete {
+  background: #ea4335;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
