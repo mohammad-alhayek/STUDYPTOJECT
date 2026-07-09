@@ -11,4 +11,6 @@ router.use("/auth", auth);
 router.use("/users", users);
 router.use("/employees", employees);
 
+// Pages Routes
+
 export default router;

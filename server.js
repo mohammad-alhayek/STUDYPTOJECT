@@ -4,6 +4,9 @@ import routes from "./routes/index.js";
 import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 import { languageMiddleware } from "./middlewares/langMiddleware.js";
+import pages from "./routes/pages.js";
+
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 dotenv.config();
 
@@ -28,6 +31,18 @@ app.use((err, req, res, next) => {
     message: translatedMessage,
   });
 });
+
+// Frontend static files
+app.use(express.static("public"));
+
+// Pages Routes
+app.use("/", pages);
+
+// API Routes
+app.use("/api", routes);
+
+// Error Handler لازم يكون آخر middleware
+app.use(errorHandler);
 
 connectDB();
 

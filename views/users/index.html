@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users Management</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-links">
+        <a href="#" class="active">Users</a>
+        <a href="../employees/index.html">Employees</a>
+      </div>
+      <button id="logoutBtn" class="btn-danger">Logout</button>
+    </nav>
+
+    <div class="main-content">
+      <h2>Users Management Panel</h2>
+
+      <div class="card form-inline">
+        <h3 id="formTitle">Add New User</h3>
+        <form id="userForm">
+          <input type="hidden" id="userId" />
+          <input type="text" id="userName" placeholder="Name" required />
+          <input type="email" id="userEmail" placeholder="Email" required />
+          <input
+            type="password"
+            id="userPassword"
+            placeholder="Password (Only for new user)"
+          />
+          <button type="submit" id="submitUserBtn" class="btn">
+            Save User
+          </button>
+          <button
+            type="button"
+            id="cancelEditBtn"
+            class="btn-secondary"
+            style="display: none"
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </div>
+    <script src="/js/users.js"></script>
+  </body>
+</html>
