@@ -45,19 +45,11 @@ export const addEmployee = async (req, res) => {
 
         const employee = req.body;
 
-        const result = await employeeService.addEmployee(employee);
-
-        res.status(201).json({
-            message: "Employee added successfully",
-            data: result
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
+  res.status(201).json({
+    message: req.__("EMPLOYEE_ADDED_SUCCESS"),
+    data: result,
+  });
+});
 
 // UPDATE EMPLOYEE
 export const updateEmployee = async (req, res) => {
@@ -67,16 +59,10 @@ export const updateEmployee = async (req, res) => {
 
        
 
-        await employeeService.updateEmployee(id, employee);
-
-        res.json({
-            message: "Employee updated successfully"
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+  res.json({
+    message: req.__("EMPLOYEE_UPDATED_SUCCESS"),
+  });
+});
 
 // DELETE EMPLOYEE
 export const deleteEmployee = async (req, res) => {
@@ -85,13 +71,7 @@ export const deleteEmployee = async (req, res) => {
 
      
 
-        await employeeService.deleteEmployee(id);
-
-        res.json({
-            message: "Employee deleted successfully"
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+  res.json({
+    message: req.__("EMPLOYEE_DELETED_SUCCESS"),
+  });
+});

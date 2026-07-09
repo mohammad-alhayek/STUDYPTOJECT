@@ -6,10 +6,11 @@ export const login = async (req, res) => {
 
         const token = await authService.login(email, password);
 
-        res.json({
-            message: "Login successful",
-            token
-        });
+  res.json({
+    message: req.__("LOGIN_SUCCESS"),
+    data: tokens,
+  });
+});
 
     } catch (error) {
         res.status(401).json({
@@ -23,17 +24,19 @@ export const register = async (req, res) => {
 
         const result = await authService.register(user);
 
-        res.status(201).json({
-            message: "User registered successfully",
-            data: result
-        });
+  res.json({
+    message: req.__("LOGOUT_SUCCESS"),
+  });
+});
 
     } catch (error) {
         console.log(error);
         console.log(error.original);
 
-        res.status(400).json({
-            message: error.message
-        });
-    }
-};
+  const result = await authService.register(user);
+
+  res.status(201).json({
+    message: req.__("REGISTERED_SUCCESSFULLY"),
+    data: result,
+  });
+});

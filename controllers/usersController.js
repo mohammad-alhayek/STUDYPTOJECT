@@ -21,11 +21,11 @@ export const getUser = async (req, res) => {
 
         const user = await userService.getUserById(id);
 
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
+  if (!user) {
+    return res.status(404).json({
+      message: req.__("USER_NOT_FOUND"),
+    });
+  }
 
         res.json(user);
 
@@ -62,16 +62,10 @@ export const updateUser = async (req, res) => {
         const user = req.body;
 
 
-        await userService.updateUser(id, user);
+  res.json({
+    message: req.__("USER_UPDATED_SUCCESS"),
+  });
 
-        res.json({
-            message: "User updated successfully"
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
 // DELETE USER
 export const deleteUser = async (req, res) => {
@@ -80,13 +74,7 @@ export const deleteUser = async (req, res) => {
 
        
 
-        await userService.deleteUser(id);
-
-        res.json({
-            message: "User deleted successfully"
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+  res.json({
+    message: req.__("USER_DELETED_SUCCESS"),
+  });
+});

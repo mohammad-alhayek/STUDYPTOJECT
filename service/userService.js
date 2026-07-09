@@ -11,12 +11,24 @@ export const getUsers = async () => {
 
 // GET USER BY ID
 export const getUserById = async (id) => {
+<<<<<<< Updated upstream
+=======
+  if (!id) {
+    throw new AppError("USER_ID_REQUIRED", 400);
+  }
+>>>>>>> Stashed changes
 
     if (!id) {
         throw new Error("User ID is required");
     }
 
+<<<<<<< Updated upstream
     const user = await userModel.getUserById(id);
+=======
+  if (!user) {
+    throw new AppError("USER_NOT_FOUND", 404);
+  }
+>>>>>>> Stashed changes
 
     if (!user) {
         throw new Error("User not found");
@@ -40,26 +52,37 @@ export const addUser = async (user) => {
 };
 // UPDATE USER
 export const updateUser = async (id, user) => {
+  if (!id) {
+    throw new AppError("USER_ID_REQUIRED", 400);
+  }
 
-    // 🧠 هنا مكان الـ business logic (لاحقاً)
-    if (!id) {
-        throw new Error("User ID is required");
-    }
+  if (!user.full_name) {
+    throw new AppError("USER_NAME_REQUIRED", 400);
+  }
 
     if (!user.full_name) {
         throw new Error("User name is required");
     }
 
-    return await userModel.updateUser(id, user);
+  if (!existingUser) {
+    throw new AppError("USER_NOT_FOUND", 404);
+  }
+
+  return await userModel.updateUser(id, user);
 };
 // DELETE USER
 export const deleteUser = async (id) => {
+  if (!id) {
+    throw new AppError("USER_ID_REQUIRED", 400);
+  }
 
     if (!id) {
         throw new Error("User ID is required");
     }
 
-    const existing = await userModel.getUserById(id);
+  if (!existing) {
+    throw new AppError("USER_NOT_FOUND", 404);
+  }
 
     if (!existing) {
         throw new Error("User not found");
