@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:3000/api/employees/EMP-001
+  url: http://localhost:3000/api/employees/46b0099d-8134-437f-b0c8-42ae9ed7ba1f
   auth: inherit
 
 settings:

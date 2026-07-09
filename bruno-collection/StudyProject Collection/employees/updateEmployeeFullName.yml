@@ -1,7 +1,7 @@
 info:
   name: updateEmployeeFullName
   type: http
-  seq: 17
+  seq: 7
 
 http:
   method: PUT

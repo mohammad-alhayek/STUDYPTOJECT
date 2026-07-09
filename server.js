@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import routes from "./routes/index.js";
+import pages from "./routes/pages.js";
 import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 import { errorHandler } from "./middlewares/errorHandler.js";
@@ -15,6 +16,9 @@ app.use(express.urlencoded({ extended: false }));
 // Frontend static files
 app.use(express.static("public"));
 
+// Pages Routes
+app.use("/", pages);
+
 // API Routes
 app.use("/api", routes);
 
@@ -23,7 +27,6 @@ app.use(errorHandler);
 
 connectDB();
 
-// open server in custom port
 app.listen(3000, () => {
   console.log("server started");
 });
