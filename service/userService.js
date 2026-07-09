@@ -1,11 +1,7 @@
-//import * as userModel from '../model/userModel.js';
 import * as userModel from "../repositories/userRepository.js";
-import {
-  generateEmployeeId,
-  generateUserId,
-} from "../utils/generateEmployeeId.js";
+import AppError from "../utils/AppError.js";
 
-// GET ALL Users
+// GET ALL USERS
 export const getUsers = async () => {
   return await userModel.getAllUsers();
 };
@@ -16,32 +12,15 @@ export const getUserById = async (id) => {
     throw new AppError("USER_ID_REQUIRED", 400);
   }
 
-  if (!id) {
-    throw new Error("User ID is required");
-  }
+  const user = await userModel.getUserById(id);
 
   if (!user) {
     throw new AppError("USER_NOT_FOUND", 404);
   }
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-
   return user;
 };
 
-// ADD USER
-export const addUser = async (user) => {
-  const id = generateUserId();
-
-  const newUser = {
-    id,
-    ...user,
-  };
-
-  return await userModel.addUser(newUser);
-};
 // UPDATE USER
 export const updateUser = async (id, user) => {
   if (!id) {
@@ -52,9 +31,7 @@ export const updateUser = async (id, user) => {
     throw new AppError("USER_NAME_REQUIRED", 400);
   }
 
-  if (!user.full_name) {
-    throw new Error("User name is required");
-  }
+  const existingUser = await userModel.getUserById(id);
 
   if (!existingUser) {
     throw new AppError("USER_NOT_FOUND", 404);
@@ -62,22 +39,17 @@ export const updateUser = async (id, user) => {
 
   return await userModel.updateUser(id, user);
 };
+
 // DELETE USER
 export const deleteUser = async (id) => {
   if (!id) {
     throw new AppError("USER_ID_REQUIRED", 400);
   }
 
-  if (!id) {
-    throw new Error("User ID is required");
-  }
+  const existing = await userModel.getUserById(id);
 
   if (!existing) {
     throw new AppError("USER_NOT_FOUND", 404);
-  }
-
-  if (!existing) {
-    throw new Error("User not found");
   }
 
   return await userModel.deleteUser(id);

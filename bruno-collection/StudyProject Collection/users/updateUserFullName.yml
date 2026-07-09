@@ -1,0 +1,23 @@
+info:
+  name: updateUserFullName
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/users/USR-002
+  body:
+    type: json
+    data: |
+      {
+
+          "full_name": "Sara Omer Ali"
+
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

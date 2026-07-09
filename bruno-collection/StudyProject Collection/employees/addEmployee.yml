@@ -1,0 +1,22 @@
+info:
+  name: addEmployee
+  type: http
+  seq: 13
+
+http:
+  method: POST
+  url: http://localhost:3000/api/employees
+  body:
+    type: json
+    data: |-
+      {
+        "user_id": "USR-0010",
+          "full_name": "Lara Ahmad"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

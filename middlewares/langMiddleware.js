@@ -2,15 +2,23 @@ import fs from "fs";
 import path from "path";
 
 export const languageMiddleware = (req, res, next) => {
-  const lang = req.headers["accept-language"] === "ar" ? "ar" : "en";
+  const acceptLanguage = req.headers["accept-language"]?.toLowerCase() || "en";
 
-  const filePath = path.join(process.cwd(), "locales", `${lang}.json`);
-  const fileData = fs.readFileSync(filePath, "utf8");
-  const translations = JSON.parse(fileData);
+  const lang =
+    acceptLanguage.includes("ar") || req.query.lang === "ar" ? "ar" : "en";
 
-  req.__ = (key) => {
-    return translations[key] || key;
-  };
+  try {
+    const filePath = path.join(process.cwd(), "locales", `${lang}.json`);
+    const fileData = fs.readFileSync(filePath, "utf8");
+    const translations = JSON.parse(fileData);
+
+    req.__ = (key) => {
+      return translations[key] || key;
+    };
+  } catch (error) {
+    console.error("Language file error:", error);
+    req.__ = (key) => key;
+  }
 
   next();
 };

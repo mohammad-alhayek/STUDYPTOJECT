@@ -1,49 +1,32 @@
+import * as employeeService from "../service/employeeService.js";
+import catchAsync from "../middlewares/catchAsync.js";
 
-import * as employeeService from '../service/employeeService.js';
 console.log("employeesController loaded");
 
-
-
-
-
-
-
-
-
 // GET ALL
-export const getEmployees = async (req, res) => {
-    try {
-        const employees = await employeeService.getEmployees();
-        res.json(employees);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+export const getEmployees = catchAsync(async (req, res) => {
+  const employees = await employeeService.getEmployees();
+  res.json(employees);
+});
+
 // GET BY ID
-export const getEmployee = async (req, res) => {
-    try {
-        const id = (req.params.id);
+export const getEmployee = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const employee = await employeeService.getEmployeeById(id);
 
-       
+  if (!employee) {
+    return res.status(404).json({
+      message: req.__("EMPLOYEE_NOT_FOUND"),
+    });
+  }
 
-        const employee = await employeeService.getEmployeeById(id);
+  res.json(employee);
+});
 
-        res.json(employee);
-
-    } catch (error) {
-
-        if (error.message === "Employee not found") {
-            return res.status(404).json({ message: error.message });
-        }
-
-        res.status(500).json({ message: error.message });
-    }
-};
 // ADD EMPLOYEE
-export const addEmployee = async (req, res) => {
-    try {
-
-        const employee = req.body;
+export const addEmployee = catchAsync(async (req, res) => {
+  const employee = req.body;
+  const result = await employeeService.addEmployee(employee);
 
   res.status(201).json({
     message: req.__("EMPLOYEE_ADDED_SUCCESS"),
@@ -52,12 +35,11 @@ export const addEmployee = async (req, res) => {
 });
 
 // UPDATE EMPLOYEE
-export const updateEmployee = async (req, res) => {
-    try {
-        const id = (req.params.id);
-        const employee = req.body;
+export const updateEmployee = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const employee = req.body;
 
-       
+  await employeeService.updateEmployee(id, employee);
 
   res.json({
     message: req.__("EMPLOYEE_UPDATED_SUCCESS"),
@@ -65,11 +47,10 @@ export const updateEmployee = async (req, res) => {
 });
 
 // DELETE EMPLOYEE
-export const deleteEmployee = async (req, res) => {
-    try {
-        const id = (req.params.id);
+export const deleteEmployee = catchAsync(async (req, res) => {
+  const id = req.params.id;
 
-     
+  await employeeService.deleteEmployee(id);
 
   res.json({
     message: req.__("EMPLOYEE_DELETED_SUCCESS"),

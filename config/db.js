@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
 export const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -13,14 +12,14 @@ export const sequelize = new Sequelize(
     host: process.env.DB_SERVER,
     dialect: "mssql",
     dialectModule: tedious,
-    logging: console.log,
+    logging: false,
     dialectOptions: {
       options: {
         encrypt: false,
         trustServerCertificate: true,
       },
     },
-  }
+  },
 );
 
 export const connectDB = async () => {

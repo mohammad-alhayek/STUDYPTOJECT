@@ -18,15 +18,24 @@ export const login = async (email, password) => {
   }
 
   const accessToken = jwt.sign(
-    { id: user.id, email: user.email },
+    {
+      id: user.id,
+      email: user.email,
+    },
     process.env.JWT_SECRET,
-    { expiresIn: "15m" },
+    {
+      expiresIn: "15m",
+    },
   );
 
   const refreshToken = jwt.sign(
-    { id: user.id },
+    {
+      id: user.id,
+    },
     process.env.JWT_REFRESH_SECRET,
-    { expiresIn: "7d" },
+    {
+      expiresIn: "7d",
+    },
   );
 
   await refreshTokenRepository.createRefreshToken({
@@ -35,7 +44,10 @@ export const login = async (email, password) => {
     expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
-  return { accessToken, refreshToken };
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 export const logout = async (refreshToken) => {
@@ -44,18 +56,22 @@ export const logout = async (refreshToken) => {
   }
 
   await refreshTokenRepository.deleteRefreshToken(refreshToken);
+
   return true;
 };
 
 export const register = async (user) => {
+  // Check email exists
   const existingUser = await userRepository.getUserByEmail(user.email);
 
   if (existingUser) {
     throw new AppError("EMAIL_EXISTS", 409);
   }
 
+  // Hash password
   const hashedPassword = await bcrypt.hash(user.password, 10);
 
+  // Build new user object
   const newUser = {
     email: user.email,
     password: hashedPassword,
@@ -64,8 +80,10 @@ export const register = async (user) => {
     last_login: null,
   };
 
+  // Save to DB
   const createdUser = await userRepository.createUser(newUser);
 
+  // Safe response
   return {
     id: createdUser.id,
     email: createdUser.email,

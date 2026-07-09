@@ -1,42 +1,34 @@
-import * as authService from '../service/authService.js';
+import * as authService from "../service/authService.js";
+import catchAsync from "../middlewares/catchAsync.js";
 
-export const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+console.log("authController loaded");
 
-        const token = await authService.login(email, password);
+// LOGIN
+export const login = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+
+  const token = await authService.login(email, password);
 
   res.json({
     message: req.__("LOGIN_SUCCESS"),
-    data: tokens,
+    data: token,
   });
 });
 
-    } catch (error) {
-        res.status(401).json({
-            message: error.message
-        });
-    }
-};
-export const register = async (req, res) => {
-    try {
-        const user = req.body;
-
-        const result = await authService.register(user);
-
-  res.json({
-    message: req.__("LOGOUT_SUCCESS"),
-  });
-});
-
-    } catch (error) {
-        console.log(error);
-        console.log(error.original);
+// REGISTER
+export const register = catchAsync(async (req, res) => {
+  const user = req.body;
 
   const result = await authService.register(user);
 
   res.status(201).json({
     message: req.__("REGISTERED_SUCCESSFULLY"),
     data: result,
+  });
+});
+// LOGOUT
+export const logout = catchAsync(async (req, res) => {
+  res.json({
+    message: req.__("LOGOUT_SUCCESS"),
   });
 });

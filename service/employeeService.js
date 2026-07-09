@@ -1,6 +1,5 @@
-//import * as employeeModel from '../model/employeeModel.js';
 import * as employeeRepos from "../repositories/employeeRepository.js";
-import { generateEmployeeId } from "../utils/generateEmployeeId.js";
+import AppError from "../utils/AppError.js";
 
 // GET ALL EMPLOYEES
 export const getEmployees = async () => {
@@ -13,9 +12,7 @@ export const getEmployeeById = async (id) => {
     throw new AppError("EMPLOYEE_ID_REQUIRED", 400);
   }
 
-  if (!id) {
-    throw new Error("Employee ID is required");
-  }
+  const employee = await employeeRepos.getEmployeeById(id);
 
   if (!employee) {
     throw new AppError("EMPLOYEE_NOT_FOUND", 404);
@@ -36,17 +33,15 @@ export const addEmployee = async (employee) => {
     address: employee.address,
   };
 
-  console.log(newEmployee);
-
   const createdEmployee = await employeeRepos.addEmployee(newEmployee);
 
-  console.log(createdEmployee);
   return {
     id: createdEmployee.id,
     full_name: createdEmployee.full_name,
     user_id: createdEmployee.user_id,
   };
 };
+
 // UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
   if (!id) {
@@ -57,9 +52,7 @@ export const updateEmployee = async (id, employee) => {
     throw new AppError("EMPLOYEE_NAME_REQUIRED", 400);
   }
 
-  if (!employee.full_name) {
-    throw new Error("Employee name is required");
-  }
+  const existingEmployee = await employeeRepos.getEmployeeById(id);
 
   if (!existingEmployee) {
     throw new AppError("EMPLOYEE_NOT_FOUND", 404);
@@ -67,23 +60,18 @@ export const updateEmployee = async (id, employee) => {
 
   return await employeeRepos.updateEmployee(id, employee);
 };
+
 // DELETE EMPLOYEE
 export const deleteEmployee = async (id) => {
   if (!id) {
     throw new AppError("EMPLOYEE_ID_REQUIRED", 400);
   }
 
-  if (!id) {
-    throw new Error("Employee ID is required");
-  }
+  const existing = await employeeRepos.getEmployeeById(id);
 
   if (!existing) {
     throw new AppError("EMPLOYEE_NOT_FOUND", 404);
   }
 
-  if (!existing) {
-    throw new Error("Employee not found");
-  }
-
-  return await employeeModel.deleteEmployee(id);
+  return await employeeRepos.deleteEmployee(id);
 };

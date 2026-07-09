@@ -1,0 +1,23 @@
+info:
+  name: updateEmployeePhoneNumber
+  type: http
+  seq: 14
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/employees/EMP-003
+  body:
+    type: json
+    data: |-
+      {
+        
+      "full_name": "Khaled Hasan",
+          "phone": "07999999999"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

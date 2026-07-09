@@ -1,0 +1,25 @@
+info:
+  name: updateUserEmail
+  type: http
+  seq: 7
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/users/USR-002
+  body:
+    type: json
+    data: |-
+      {
+
+          "full_name": "Sara Omer Ali",
+          "email": "saraOmerAli@example.com"
+
+
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
