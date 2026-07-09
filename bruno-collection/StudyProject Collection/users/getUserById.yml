@@ -5,11 +5,19 @@ info:
 
 http:
   method: GET
-  url: http://localhost:3000/api/users/022f79a8-9033-4ee5-9846-33b9f99f9bec
+  url: http://localhost:3000/api/users/{{id}}
   body:
     type: json
-    data: "{}"
+    data: |-
+      {
+        
+      }
   auth: inherit
+
+runtime:
+  variables:
+    - name: id
+      value: efe50d38-2757-412d-83ba-34ce630e08b9
 
 settings:
   encodeUrl: true

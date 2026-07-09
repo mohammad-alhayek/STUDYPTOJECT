@@ -3,18 +3,27 @@ import path from "path";
 import routes from "./routes/index.js";
 import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
+import { errorHandler } from "./middlewares/errorHandler.js";
+
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use("/api", routes);
+
+// Frontend static files
 app.use(express.static("public"));
+
+// API Routes
+app.use("/api", routes);
+
+// Error Handler لازم يكون آخر middleware
+app.use(errorHandler);
 
 connectDB();
 
-//open server in custom port
+// open server in custom port
 app.listen(3000, () => {
   console.log("server started");
 });

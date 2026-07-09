@@ -2,18 +2,19 @@ import * as userRepository from "../repositories/userRepository.js";
 import * as refreshTokenRepository from "../repositories/refreshTokenRepository.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import AppError from "../utils/AppError.js";
 
 export const login = async (email, password) => {
   const user = await userRepository.getUserByEmail(email);
 
   if (!user) {
-    throw new Error("Invalid email");
+    throw new AppError("Invalid email", 401);
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error("Invalid password");
+    throw new AppError("Invalid password", 401);
   }
 
   const accessToken = jwt.sign(
@@ -48,27 +49,29 @@ export const login = async (email, password) => {
     refreshToken,
   };
 };
+
 export const logout = async (refreshToken) => {
   if (!refreshToken) {
-    throw new Error("Refresh token is required");
+    throw new AppError("Refresh token is required", 400);
   }
 
   await refreshTokenRepository.deleteRefreshToken(refreshToken);
 
   return true;
 };
+
 export const register = async (user) => {
-  // 1. check email exists
+  // Check email exists
   const existingUser = await userRepository.getUserByEmail(user.email);
 
   if (existingUser) {
-    throw new Error("Email already exists");
+    throw new AppError("Email already exists", 409);
   }
 
-  // 2. hash password
+  // Hash password
   const hashedPassword = await bcrypt.hash(user.password, 10);
 
-  // 3. build new user object
+  // Build new user object
   const newUser = {
     email: user.email,
     password: hashedPassword,
@@ -76,13 +79,11 @@ export const register = async (user) => {
     is_active: 1,
     last_login: null,
   };
-  console.log(newUser);
 
-  // 4. save to DB
+  // Save to DB
   const createdUser = await userRepository.createUser(newUser);
-  console.log(createdUser);
 
-  // 5. return safe response
+  // Safe response
   return {
     id: createdUser.id,
     email: createdUser.email,
