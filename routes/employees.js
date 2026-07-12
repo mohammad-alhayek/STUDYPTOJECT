@@ -1,4 +1,6 @@
 import express from "express";
+import { validate } from "../middlewares/validate.js";
+import { employeeSchema } from "../validators/employeeValidator.js";
 import {
   addEmployee,
   getEmployee,
@@ -16,7 +18,7 @@ router.get("/", getEmployees);
 router.get("/:id", getEmployee);
 
 //add post
-router.post("/", addEmployee);
+router.post("/", validate(employeeSchema), addEmployee);
 // update
 router.put("/:id", updateEmployee);
 
