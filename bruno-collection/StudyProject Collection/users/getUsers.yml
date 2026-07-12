@@ -9,7 +9,9 @@ http:
   body:
     type: json
     data: "{}"
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlVTUi0yMDI2LVQ1MTRIIiwiZW1haWwiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3ODM1OTExNzEsImV4cCI6MTc4MzU5MjA3MX0.DhwDCSqW5DoCcdVEJ1PwunP9aC__XVrA2i8mTOuEf-A
 
 settings:
   encodeUrl: true

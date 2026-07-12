@@ -20,7 +20,14 @@ export const getEmployeeByName = async (full_name) => {
     where: { full_name: full_name },
   });
 };
-
+// getEmployeeByUserId
+export const getEmployeeByUserId = async (userId) => {
+  return await Employee.findOne({
+    where: {
+      user_id: userId,
+    },
+  });
+};
 // ADD EMPLOYEE
 export const addEmployee = async (employee) => {
   const createdEmployee = await Employee.create(employee);

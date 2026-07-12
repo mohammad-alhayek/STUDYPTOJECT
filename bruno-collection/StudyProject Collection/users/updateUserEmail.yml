@@ -5,7 +5,7 @@ info:
 
 http:
   method: PUT
-  url: http://localhost:3000/api/users/USR-002
+  url: http://localhost:3000/api/users/efe50d38-2757-412d-83ba-34ce630e08b9
   body:
     type: json
     data: |-

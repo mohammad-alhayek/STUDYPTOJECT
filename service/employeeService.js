@@ -1,5 +1,7 @@
 import * as employeeRepos from "../repositories/employeeRepository.js";
 import AppError from "../utils/AppError.js";
+import * as userRepository from "../repositories/userRepository.js";
+import bcrypt from "bcrypt";
 
 // GET ALL EMPLOYEES
 export const getEmployees = async () => {
@@ -23,26 +25,57 @@ export const getEmployeeById = async (id) => {
 
 // ADD EMPLOYEE
 export const addEmployee = async (employee) => {
-  const newEmployee = {
-    user_id: employee.user_id,
+  let user = await userRepository.getUserByEmail(employee.email);
+
+  if (!user) {
+    // Password is required only for new users
+    if (!employee.password) {
+      const error = new Error("Password is required for new users");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const hashedPassword = await bcrypt.hash(employee.password, 10);
+
+    user = await userRepository.createUser({
+      email: employee.email,
+      password: hashedPassword,
+      full_name: employee.full_name,
+      is_active: 1,
+      last_login: null,
+    });
+  } else {
+    const existingEmployee = await employeeRepos.getEmployeeByUserId(user.id);
+
+    if (existingEmployee) {
+      const error = new Error("Employee already exists for this user");
+      error.statusCode = 409;
+      throw error;
+    }
+  }
+
+  const createdEmployee = await employeeRepos.addEmployee({
+    user_id: user.id,
     full_name: employee.full_name,
     phone: employee.phone,
     department: employee.department,
     salary: employee.salary,
     hire_date: employee.hire_date,
     address: employee.address,
-  };
-
-  const createdEmployee = await employeeRepos.addEmployee(newEmployee);
+  });
 
   return {
-    id: createdEmployee.id,
-    full_name: createdEmployee.full_name,
-    user_id: createdEmployee.user_id,
+    user: {
+      id: user.id,
+      email: user.email,
+    },
+    employee: {
+      id: createdEmployee.id,
+      full_name: createdEmployee.full_name,
+      user_id: createdEmployee.user_id,
+    },
   };
-};
-
-// UPDATE EMPLOYEE
+}; // UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
   if (!id) {
     throw new AppError("EMPLOYEE_ID_REQUIRED", 400);
