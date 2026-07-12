@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const employeeSchema = Joi.object({
-  email: Joi.string().email().required(),
+  email: Joi.string().email().optional(),
 
   password: Joi.string().min(6).optional(),
 
@@ -14,8 +14,12 @@ export const employeeSchema = Joi.object({
     }),
 
   phone: Joi.string()
-    .pattern(/^[0-9]+$/)
-    .required(),
+    .pattern(/^\+9627[789]\d{7}$/)
+    .required()
+    .messages({
+      "string.pattern.base":
+        "Phone number must be a valid Jordanian mobile number (e.g. +96279XXXXXXX).",
+    }),
 
   department: Joi.string().required(),
 

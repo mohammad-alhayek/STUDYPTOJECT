@@ -71,21 +71,51 @@ export const register = async (user) => {
   // Hash password
   const hashedPassword = await bcrypt.hash(user.password, 10);
 
-  // Build new user object
-  const newUser = {
+  // Create user
+  const createdUser = await userRepository.createUser({
     email: user.email,
     password: hashedPassword,
     full_name: user.full_name,
     is_active: 1,
     last_login: null,
-  };
+  });
 
-  // Save to DB
-  const createdUser = await userRepository.createUser(newUser);
+  // Access Token
+  const accessToken = jwt.sign(
+    {
+      id: createdUser.id,
+      email: createdUser.email,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "15m",
+    },
+  );
 
-  // Safe response
+  // Refresh Token
+  const refreshToken = jwt.sign(
+    {
+      id: createdUser.id,
+    },
+    process.env.JWT_REFRESH_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+
+  // Save refresh token
+  await refreshTokenRepository.createRefreshToken({
+    user_id: createdUser.id,
+    token: refreshToken,
+    expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  });
+
   return {
-    id: createdUser.id,
-    email: createdUser.email,
+    user: {
+      id: createdUser.id,
+      email: createdUser.email,
+    },
+    accessToken,
+    refreshToken,
   };
 };

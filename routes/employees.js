@@ -20,7 +20,7 @@ router.get("/:id", getEmployee);
 //add post
 router.post("/", validate(employeeSchema), addEmployee);
 // update
-router.put("/:id", updateEmployee);
+router.put("/:id", validate(employeeSchema), updateEmployee);
 
 // delete
 router.delete("/:id", deleteEmployee);
