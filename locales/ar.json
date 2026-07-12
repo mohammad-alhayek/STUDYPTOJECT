@@ -18,5 +18,20 @@
 
   "LOGIN_SUCCESS": "تم تسجيل الدخول بنجاح",
   "LOGOUT_SUCCESS": "تم تسجيل الخروج بنجاح",
-  "REGISTERED_SUCCESSFULLY": "تم تسجيل المستخدم بنجاح"
+  "REGISTERED_SUCCESSFULLY": "تم تسجيل المستخدم بنجاح",
+  "VALIDATION_NAME_LETTERS": "يجب أن يحتوي الاسم على حروف ومسافات فقط",
+  "VALIDATION_NAME_REQUIRED": "الاسم الكامل مطلوب",
+  "VALIDATION_JORDANIAN_PHONE": "يجب أن يكون رقم الهاتف رقماً أردنياً صحيحاً (مثال: +96279XXXXXXX)",
+  "VALIDATION_PHONE_REQUIRED": "رقم الهاتف مطلوب",
+  "VALIDATION_DEPARTMENT_REQUIRED": "القسم مطلوب",
+  "VALIDATION_SALARY_NUMBER": "يجب أن يكون الراتب رقماً صحيحاً",
+  "VALIDATION_SALARY_POSITIVE": "يجب أن يكون الراتب قيمة موجبة",
+  "VALIDATION_SALARY_REQUIRED": "الراتب مطلوب",
+  "VALIDATION_HIRE_DATE_REQUIRED": "تاريخ التعيين مطلوب",
+  "VALIDATION_ADDRESS_REQUIRED": "العنوان مطلوب",
+  "VALIDATION_EMAIL_INVALID": "يرجى إدخال بريد إلكتروني صحيح",
+  "VALIDATION_EMAIL_REQUIRED": "البريد الإلكتروني مطلوب",
+  "VALIDATION_PASSWORD_MIN_6": "يجب أن لا تقل كلمة المرور عن 6 خانات",
+  "VALIDATION_PASSWORD_REQUIRED": "كلمة المرور مطلوبة",
+  "VALIDATION_NAME_MIN_3": "يجب أن لا يقل الاسم الكامل عن 3 أحرف"
 }

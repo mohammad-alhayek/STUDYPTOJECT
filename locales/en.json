@@ -19,5 +19,21 @@
 
   "LOGIN_SUCCESS": "Login successful",
   "LOGOUT_SUCCESS": "Logout successful",
-  "REGISTERED_SUCCESSFULLY": "User registered successfully"
+  "REGISTERED_SUCCESSFULLY": "User registered successfully",
+
+  "VALIDATION_NAME_LETTERS": "Name can only contain letters and spaces",
+  "VALIDATION_NAME_REQUIRED": "Full name is required",
+  "VALIDATION_JORDANIAN_PHONE": "Phone number must be a valid Jordanian mobile number (e.g. +96279XXXXXXX).",
+  "VALIDATION_PHONE_REQUIRED": "Phone number is required",
+  "VALIDATION_DEPARTMENT_REQUIRED": "Department is required",
+  "VALIDATION_SALARY_NUMBER": "Salary must be a valid number",
+  "VALIDATION_SALARY_POSITIVE": "Salary must be a positive number",
+  "VALIDATION_SALARY_REQUIRED": "Salary is required",
+  "VALIDATION_HIRE_DATE_REQUIRED": "Hire date is required",
+  "VALIDATION_ADDRESS_REQUIRED": "Address is required",
+  "VALIDATION_EMAIL_INVALID": "Please provide a valid email address",
+  "VALIDATION_EMAIL_REQUIRED": "Email address is required",
+  "VALIDATION_PASSWORD_MIN_6": "Password must be at least 6 characters long",
+  "VALIDATION_PASSWORD_REQUIRED": "Password is required",
+  "VALIDATION_NAME_MIN_3": "Full name must be at least 3 characters long"
 }
