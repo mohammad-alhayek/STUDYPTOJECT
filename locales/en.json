@@ -35,5 +35,6 @@
   "VALIDATION_EMAIL_REQUIRED": "Email address is required",
   "VALIDATION_PASSWORD_MIN_6": "Password must be at least 6 characters long",
   "VALIDATION_PASSWORD_REQUIRED": "Password is required",
-  "VALIDATION_NAME_MIN_3": "Full name must be at least 3 characters long"
+  "VALIDATION_NAME_MIN_3": "Full name must be at least 3 characters long",
+  "EMPLOYEE_ALREADY_EXISTS": "Employee already exists for this user"
 }

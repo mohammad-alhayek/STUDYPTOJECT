@@ -33,5 +33,6 @@
   "VALIDATION_EMAIL_REQUIRED": "البريد الإلكتروني مطلوب",
   "VALIDATION_PASSWORD_MIN_6": "يجب أن لا تقل كلمة المرور عن 6 خانات",
   "VALIDATION_PASSWORD_REQUIRED": "كلمة المرور مطلوبة",
-  "VALIDATION_NAME_MIN_3": "يجب أن لا يقل الاسم الكامل عن 3 أحرف"
+  "VALIDATION_NAME_MIN_3": "يجب أن لا يقل الاسم الكامل عن 3 أحرف",
+  "EMPLOYEE_ALREADY_EXISTS": "يوجد موظف مسجل بالفعل لهذا المستخدم"
 }

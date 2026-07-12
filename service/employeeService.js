@@ -30,9 +30,7 @@ export const addEmployee = async (employee) => {
   if (!user) {
     // Password is required only for new users
     if (!employee.password) {
-      const error = new Error("Password is required for new users");
-      error.statusCode = 400;
-      throw error;
+      throw new AppError("VALIDATION_PASSWORD_REQUIRED", 400);
     }
 
     const hashedPassword = await bcrypt.hash(employee.password, 10);
@@ -48,9 +46,7 @@ export const addEmployee = async (employee) => {
     const existingEmployee = await employeeRepos.getEmployeeByUserId(user.id);
 
     if (existingEmployee) {
-      const error = new Error("Employee already exists for this user");
-      error.statusCode = 409;
-      throw error;
+      throw new AppError("EMPLOYEE_ALREADY_EXISTS", 409);
     }
   }
 
