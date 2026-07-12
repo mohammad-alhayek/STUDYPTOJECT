@@ -1,5 +1,6 @@
 const BASE_URL = "http://localhost:3000/api/auth";
 
+// LOGIN
 document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -33,33 +34,48 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     }
   } catch (err) {
     console.error(err);
+    alert("Something went wrong");
   }
 });
 
-// (Register)
+// REGISTER
 document
   .getElementById("registerForm")
   ?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const name = document.getElementById("regName").value;
+
+    const full_name = document.getElementById("regName").value;
     const email = document.getElementById("regEmail").value;
     const password = document.getElementById("regPassword").value;
 
     try {
       const response = await fetch(`${BASE_URL}/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          full_name,
+          email,
+          password,
+        }),
       });
+
       const data = await response.json();
 
       if (response.ok) {
-        alert("Registration successful! Please login.");
-        window.location.href = "login.html";
+        localStorage.setItem("accessToken", data.data.accessToken);
+
+        localStorage.setItem("refreshToken", data.data.refreshToken);
+
+        alert("Registration successful!");
+
+        window.location.href = "/employees";
       } else {
         alert(data.message || "Registration failed");
       }
     } catch (err) {
       console.error(err);
+      alert("Something went wrong");
     }
   });

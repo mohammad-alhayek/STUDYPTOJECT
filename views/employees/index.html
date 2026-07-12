@@ -6,12 +6,14 @@
     <title>Employees Management</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
+
   <body>
     <nav class="navbar">
       <div class="nav-links">
-        <a href="../users/index.html">Users</a>
-        <a href="#" class="active">Employees</a>
+        <a href="/users">Users</a>
+        <a href="/employees" class="active">Employees</a>
       </div>
+
       <button id="logoutBtn" class="btn-danger">Logout</button>
     </nav>
 
@@ -19,34 +21,54 @@
       <h2>Employees Management Panel</h2>
 
       <div class="card">
-        <h3>Add New Employee</h3>
+        <h3 id="formTitle">Add New Employee</h3>
+
         <form id="employeeForm">
+          <input type="hidden" id="employeeId" />
+
           <div class="form-grid">
             <input
               type="text"
-              id="empUserId"
-              placeholder="User ID (Required/NOT NULL)"
-              required
-            />
-            <input
-              type="text"
               id="empFullName"
-              placeholder="Full Name (Required/NOT NULL)"
+              placeholder="Full Name"
               required
             />
+
+            <input type="email" id="empEmail" placeholder="Email" required />
+
+            <input
+              type="password"
+              id="empPassword"
+              placeholder="Password (For new user)"
+            />
+
             <input type="text" id="empPhone" placeholder="Phone Number" />
+
             <input type="text" id="empDept" placeholder="Department" />
+
             <input
               type="number"
               step="0.01"
               id="empSalary"
               placeholder="Salary"
             />
-            <input type="date" id="empHireDate" placeholder="Hire Date" />
+
+            <input type="date" id="empHireDate" />
+
             <input type="text" id="empAddress" placeholder="Address" />
           </div>
+
           <button type="submit" class="btn" style="margin-top: 15px">
-            Add Employee
+            Save Employee
+          </button>
+
+          <button
+            type="button"
+            id="cancelEditBtn"
+            class="btn-secondary"
+            style="display: none"
+          >
+            Cancel
           </button>
         </form>
       </div>
@@ -55,16 +77,18 @@
         <thead>
           <tr>
             <th>Full Name</th>
-            <th>User ID</th>
+            <th>Email</th>
             <th>Department</th>
             <th>Salary</th>
             <th>Phone</th>
             <th>Actions</th>
           </tr>
         </thead>
+
         <tbody id="employeesTableBody"></tbody>
       </table>
     </div>
-    <script src="/js/users.js"></script>
+
+    <script src="/js/employees.js"></script>
   </body>
 </html>
