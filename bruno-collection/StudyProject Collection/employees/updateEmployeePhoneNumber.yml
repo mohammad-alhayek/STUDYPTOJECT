@@ -5,14 +5,14 @@ info:
 
 http:
   method: PUT
-  url: http://localhost:3000/api/employees/EMP-003
+  url: http://localhost:3000/api/employees/cc45b3e8-9b76-4568-b177-48efc3516aa2
   body:
     type: json
     data: |-
       {
         
       "full_name": "Khaled Hasan",
-          "phone": "07999999999"
+          "phone": "+962779394950"
       }
   auth: inherit
 

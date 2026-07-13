@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
+import User from "./userModel.js";
 
 const Employee = sequelize.define(
   "Employee",
@@ -46,5 +47,9 @@ const Employee = sequelize.define(
     updatedAt: false,
   },
 );
+Employee.belongsTo(User, {
+  foreignKey: "user_id",
+  targetKey: "id",
+});
 
 export default Employee;

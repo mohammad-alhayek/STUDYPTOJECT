@@ -10,8 +10,14 @@ http:
     type: json
     data: |-
       {
-        "user_id": "USR-0010",
-          "full_name": "Lara Ahmad"
+        "email": "existing@gmail.com",
+        "full_name": "Mohammad",
+        "phone": "0791234567",
+        "department": "IT",
+        "salary": 4,
+        "hire_date": "2026-07-12",
+        "password":"33333333",
+        "address": "Amman"
       }
   auth: inherit
 

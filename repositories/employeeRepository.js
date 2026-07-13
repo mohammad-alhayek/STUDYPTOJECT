@@ -1,40 +1,52 @@
 // repositories/employeeRepository.js
 import Employee from "../model/employeeModel.js";
+import User from "../model/userModel.js";
+import { Op } from "sequelize";
 
-// GET ALL Employees
-export const getAllEmployees = async () => {
-  return await Employee.findAll();
-};
+export const getAllEmployees = async (filters = {}) => {
+  const where = {};
 
-// GET EMPLOYEE BY ID
-export const getEmployeeById = async (id) => {
-  if (!id) {
-    throw new Error("Employee ID is required");
+  // Salary filter
+  if (filters.minSalary && filters.maxSalary) {
+    where.salary = {
+      [Op.between]: [Number(filters.minSalary), Number(filters.maxSalary)],
+    };
+  } else if (filters.minSalary) {
+    where.salary = {
+      [Op.gte]: Number(filters.minSalary),
+    };
+  } else if (filters.maxSalary) {
+    where.salary = {
+      [Op.lte]: Number(filters.maxSalary),
+    };
   }
-  return await Employee.findByPk(id);
-};
 
-// GET EMPLOYEE BY NAME
-export const getEmployeeByName = async (full_name) => {
+  // Hire date filter
+  if (filters.startDate && filters.endDate) {
+    where.hire_date = {
+      [Op.between]: [filters.startDate, filters.endDate],
+    };
+  } else if (filters.startDate) {
+    where.hire_date = {
+      [Op.gte]: filters.startDate,
+    };
+  } else if (filters.endDate) {
+    where.hire_date = {
+      [Op.lte]: filters.endDate,
+    };
+  }
+
   return await Employee.findAll({
-    where: { full_name: full_name },
+    where,
+
+    include: [
+      {
+        model: User,
+        attributes: ["email"],
+      },
+    ],
   });
 };
-// getEmployeeByUserId
-export const getEmployeeByUserId = async (userId) => {
-  return await Employee.findOne({
-    where: {
-      user_id: userId,
-    },
-  });
-};
-// ADD EMPLOYEE
-export const addEmployee = async (employee) => {
-  const createdEmployee = await Employee.create(employee);
-
-  return createdEmployee;
-};
-
 // UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
   if (!id) {

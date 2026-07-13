@@ -24,17 +24,50 @@ document.getElementById("logoutBtn")?.addEventListener("click", async () => {
   window.location.href = "/login";
 });
 
-// GET ALL EMPLOYEES
+// GET ALL EMPLOYEES WITH SALARY FILTER
 
 async function loadEmployees() {
   try {
-    const res = await fetch(API_URL, {
+    const minSalary = document.getElementById("minSalary")?.value;
+    const maxSalary = document.getElementById("maxSalary")?.value;
+    const startDate = document.getElementById("startDate")?.value;
+    const endDate = document.getElementById("endDate")?.value;
+
+    let url = API_URL;
+
+    const params = new URLSearchParams();
+
+    if (minSalary) {
+      params.append("minSalary", minSalary);
+    }
+
+    if (maxSalary) {
+      params.append("maxSalary", maxSalary);
+    }
+    if (startDate) {
+      params.append("startDate", startDate);
+    }
+
+    if (endDate) {
+      params.append("endDate", endDate);
+    }
+
+    if ([...params].length > 0) {
+      url += `?${params.toString()}`;
+    }
+
+    const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
 
     const employees = await res.json();
+
+    if (!res.ok) {
+      console.error("API Error:", employees);
+      return;
+    }
 
     const tbody = document.getElementById("employeesTableBody");
 
@@ -52,7 +85,7 @@ async function loadEmployees() {
 
           <td>${emp.full_name || ""}</td>
 
-          <td>${emp.user_id || ""}</td>
+          <td>${emp.User?.email || ""}</td>
 
           <td>${emp.department || "N/A"}</td>
 
@@ -80,6 +113,20 @@ async function loadEmployees() {
   }
 }
 
+// Search button
+
+document.getElementById("filterBtn")?.addEventListener("click", () => {
+  loadEmployees();
+});
+
+// Clear filter
+
+document.getElementById("clearFilterBtn")?.addEventListener("click", () => {
+  document.getElementById("minSalary").value = "";
+  document.getElementById("maxSalary").value = "";
+
+  loadEmployees();
+});
 // ADD EMPLOYEE
 
 document

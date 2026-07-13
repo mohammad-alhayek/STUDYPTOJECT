@@ -4,8 +4,8 @@ import * as userRepository from "../repositories/userRepository.js";
 import bcrypt from "bcrypt";
 
 // GET ALL EMPLOYEES
-export const getEmployees = async () => {
-  return await employeeRepos.getAllEmployees();
+export const getEmployees = async (filters) => {
+  return await employeeRepos.getAllEmployees(filters);
 };
 
 // GET EMPLOYEE BY ID
