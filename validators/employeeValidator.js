@@ -10,7 +10,7 @@ export const employeeSchema = Joi.object({
     .min(3)
     .required()
     .messages({
-      "string.pattern.base": "VALIDATION_NAME_LETTERS", // 🌟 مفتاح بديل للنص
+      "string.pattern.base": "VALIDATION_NAME_LETTERS",
       "string.empty": "VALIDATION_NAME_REQUIRED",
       "any.required": "VALIDATION_NAME_REQUIRED",
     }),
@@ -19,7 +19,7 @@ export const employeeSchema = Joi.object({
     .pattern(/^\+9627[789]\d{7}$/)
     .required()
     .messages({
-      "string.pattern.base": "VALIDATION_JORDANIAN_PHONE", // 🌟 مفتاح بديل للنص
+      "string.pattern.base": "VALIDATION_JORDANIAN_PHONE",
       "string.empty": "VALIDATION_PHONE_REQUIRED",
       "any.required": "VALIDATION_PHONE_REQUIRED",
     }),
