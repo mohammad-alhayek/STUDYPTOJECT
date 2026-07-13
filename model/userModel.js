@@ -10,6 +10,11 @@ const User = sequelize.define(
       primaryKey: true,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      defaultValue: "user",
+    },
     email: {
       type: DataTypes.STRING(100),
       allowNull: false,

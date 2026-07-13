@@ -1,12 +1,29 @@
 // repositories/employeeRepository.js
+
 import Employee from "../model/employeeModel.js";
 import User from "../model/userModel.js";
 import { Op } from "sequelize";
 
+// GET EMPLOYEE BY USER ID
+export const getEmployeeByUserId = async (user_id) => {
+  return await Employee.findOne({
+    where: {
+      user_id,
+    },
+    include: [
+      {
+        model: User,
+        attributes: ["email"],
+      },
+    ],
+  });
+};
+
+// GET ALL EMPLOYEES WITH FILTERS
 export const getAllEmployees = async (filters = {}) => {
   const where = {};
 
-  // Salary filter
+  // Salary Filter
   if (filters.minSalary && filters.maxSalary) {
     where.salary = {
       [Op.between]: [Number(filters.minSalary), Number(filters.maxSalary)],
@@ -21,7 +38,7 @@ export const getAllEmployees = async (filters = {}) => {
     };
   }
 
-  // Hire date filter
+  // Hire Date Filter
   if (filters.startDate && filters.endDate) {
     where.hire_date = {
       [Op.between]: [filters.startDate, filters.endDate],
@@ -47,15 +64,37 @@ export const getAllEmployees = async (filters = {}) => {
     ],
   });
 };
+
+// GET EMPLOYEE BY ID
+export const getEmployeeById = async (id) => {
+  return await Employee.findByPk(id, {
+    include: [
+      {
+        model: User,
+        attributes: ["email"],
+      },
+    ],
+  });
+};
+
+// CREATE EMPLOYEE
+export const addEmployee = async (employee) => {
+  return await Employee.create(employee);
+};
+
 // UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
   if (!id) {
     throw new Error("Employee ID is required");
   }
+
   await Employee.update(employee, {
-    where: { id: id },
+    where: {
+      id,
+    },
   });
-  return id;
+
+  return await getEmployeeById(id);
 };
 
 // DELETE EMPLOYEE
@@ -63,7 +102,10 @@ export const deleteEmployee = async (id) => {
   if (!id) {
     throw new Error("Employee ID is required");
   }
-  await Employee.destroy({
-    where: { id: id },
+
+  return await Employee.destroy({
+    where: {
+      id,
+    },
   });
 };

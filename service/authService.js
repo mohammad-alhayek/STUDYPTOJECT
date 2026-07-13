@@ -21,6 +21,7 @@ export const login = async (email, password) => {
     {
       id: user.id,
       email: user.email,
+      role: user.role,
     },
     process.env.JWT_SECRET,
     {
@@ -85,6 +86,7 @@ export const register = async (user) => {
     {
       id: createdUser.id,
       email: createdUser.email,
+      role: user.role,
     },
     process.env.JWT_SECRET,
     {
