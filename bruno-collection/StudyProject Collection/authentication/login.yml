@@ -6,12 +6,16 @@ info:
 http:
   method: POST
   url: "{{base_url}}/api/auth/login"
+  headers:
+    - name: Accept-Language
+      value: ar
   body:
     type: json
     data: |-
-      {  "email": "lara@example.com",
-
-      "password":"123456"}
+      {
+        "email": "existing@gmail.com",
+        "password": "33333333"
+      }
   auth: inherit
 
 runtime:

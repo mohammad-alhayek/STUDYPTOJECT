@@ -37,6 +37,14 @@ export const addUser = catchAsync(async (req, res) => {
 // UPDATE USER
 export const updateUser = catchAsync(async (req, res) => {
   const id = req.params.id;
+
+  // user العادي يعدل حسابه فقط
+  if (req.user.role === "user" && req.user.id !== id) {
+    return res.status(403).json({
+      message: "You can only update your own account",
+    });
+  }
+
   const user = req.body;
 
   await userService.updateUser(id, user);
@@ -49,6 +57,13 @@ export const updateUser = catchAsync(async (req, res) => {
 // DELETE USER
 export const deleteUser = catchAsync(async (req, res) => {
   const id = req.params.id;
+
+  // user العادي يحذف حسابه فقط
+  if (req.user.role === "user" && req.user.id !== id) {
+    return res.status(403).json({
+      message: "You can only delete your own account",
+    });
+  }
 
   await userService.deleteUser(id);
 

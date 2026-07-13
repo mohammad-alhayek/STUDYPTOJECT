@@ -20,6 +20,7 @@
     <div class="main-content">
       <h2>Employees Management Panel</h2>
 
+      <!-- Add Employee -->
       <div class="card">
         <h3 id="formTitle">Add New Employee</h3>
 
@@ -73,6 +74,23 @@
         </form>
       </div>
 
+      <div class="card">
+        <h3>Filter Employees</h3>
+
+        <input type="number" id="minSalary" placeholder="Min Salary" />
+
+        <input type="number" id="maxSalary" placeholder="Max Salary" />
+
+        <input type="date" id="startDate" />
+
+        <input type="date" id="endDate" />
+
+        <button id="filterBtn" class="btn">Search</button>
+
+        <button id="clearFilterBtn" class="btn-secondary">Clear</button>
+      </div>
+
+      <!-- Employees Table -->
       <table class="data-table">
         <thead>
           <tr>

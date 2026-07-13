@@ -1,23 +1,27 @@
 import express from "express";
+
 import {
   getUser,
   getUsers,
   deleteUser,
   updateUser,
 } from "../controllers/usersController.js";
-import { loginLimiter } from "../middlewares/rateLimiter.js";
+
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { authorize } from "../middlewares/roleMiddleware.js";
+
 const router = express.Router();
 
-// get all posts
-router.get("/", getUsers);
+// GET ALL USERS
+router.get("/", authMiddleware, getUsers);
 
-// get single post
-router.get("/:id", getUser);
+// GET SINGLE USER
+router.get("/:id", authMiddleware, authorize("admin"), getUser);
 
-// update
-router.put("/:id", updateUser);
+// UPDATE USER
+router.put("/:id", authMiddleware, authorize("admin", "user"), updateUser);
 
-// delete
-router.delete("/:id", deleteUser);
+//delete
+router.delete("/:id", authMiddleware, authorize("admin", "user"), deleteUser);
 
 export default router;

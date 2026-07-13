@@ -1,6 +1,11 @@
 import express from "express";
+
 import { validate } from "../middlewares/validate.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { authorize } from "../middlewares/roleMiddleware.js";
+
 import { employeeSchema } from "../validators/employeeValidator.js";
+
 import {
   addEmployee,
   getEmployee,
@@ -11,18 +16,35 @@ import {
 
 const router = express.Router();
 
-// get all posts
-router.get("/", getEmployees);
+// GET ALL EMPLOYEES
+// أي مستخدم مسجل دخول يستطيع يشوف
+router.get("/", authMiddleware, getEmployees);
 
-// get single post
-router.get("/:id", getEmployee);
+// GET ONE EMPLOYEE
+router.get("/:id", authMiddleware, getEmployee);
 
-//add post
-router.post("/", validate(employeeSchema), addEmployee);
-// update
-router.put("/:id", validate(employeeSchema), updateEmployee);
+// ADD EMPLOYEE
+// فقط admin
+router.post(
+  "/",
+  authMiddleware,
+  authorize("admin"),
+  validate(employeeSchema),
+  addEmployee,
+);
 
-// delete
-router.delete("/:id", deleteEmployee);
+// UPDATE EMPLOYEE
+// فقط admin
+router.put(
+  "/:id",
+  authMiddleware,
+  authorize("admin"),
+  validate(employeeSchema),
+  updateEmployee,
+);
+
+// DELETE EMPLOYEE
+// فقط admin
+router.delete("/:id", authMiddleware, authorize("admin"), deleteEmployee);
 
 export default router;

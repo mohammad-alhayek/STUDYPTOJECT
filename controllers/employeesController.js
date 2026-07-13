@@ -5,8 +5,16 @@ console.log("employeesController loaded");
 
 // GET ALL
 export const getEmployees = catchAsync(async (req, res) => {
-  const employees = await employeeService.getEmployees();
-  res.json(employees);
+  const filters = {
+    minSalary: req.query.minSalary,
+    maxSalary: req.query.maxSalary,
+    startDate: req.query.startDate,
+    endDate: req.query.endDate,
+  };
+
+  const employees = await employeeService.getEmployees(filters);
+
+  res.status(200).json(employees);
 });
 
 // GET BY ID
