@@ -64,3 +64,25 @@ export const deleteEmployee = catchAsync(async (req, res) => {
     message: req.__("EMPLOYEE_DELETED_SUCCESS"),
   });
 });
+
+export const getMyEmployee = catchAsync(async (req, res) => {
+  const employee = await employeeService.getEmployeeByUserId(req.user.id);
+
+  res.status(200).json(employee);
+});
+
+export const updateMyEmployee = catchAsync(async (req, res) => {
+  const employee = await employeeService.getEmployeeByUserId(req.user.id);
+
+  if (!employee) {
+    return res.status(404).json({
+      message: "Employee not found",
+    });
+  }
+
+  await employeeService.updateEmployee(employee.id, req.body);
+
+  res.json({
+    message: "Employee updated successfully",
+  });
+});

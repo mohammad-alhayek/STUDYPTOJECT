@@ -1,9 +1,12 @@
 const API_URL = "http://localhost:3000/api/users";
 const AUTH_URL = "http://localhost:3000/api/auth";
 
+const role = localStorage.getItem("role");
+
 let isEditing = false;
 
-// Get token header
+// Headers
+
 function getAuthHeaders() {
   return {
     "Content-Type": "application/json",
@@ -12,6 +15,7 @@ function getAuthHeaders() {
 }
 
 // Logout
+
 function setupLogout() {
   document.getElementById("logoutBtn")?.addEventListener("click", async () => {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -19,36 +23,56 @@ function setupLogout() {
     try {
       await fetch(`${AUTH_URL}/logout`, {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           refreshToken,
         }),
       });
     } catch (err) {
       console.error(err);
-    } finally {
-      localStorage.clear();
-
-      window.location.href = "/login";
     }
+
+    localStorage.clear();
+
+    window.location.href = "/login";
   });
 }
 
-// GET ALL USERS
+// GET USERS
+
 async function loadUsers() {
   try {
-    const res = await fetch(API_URL, {
+    let url = API_URL;
+
+    // normal user
+
+    if (role !== "admin") {
+      url = `${API_URL}/me`;
+    }
+
+    const res = await fetch(url, {
       headers: getAuthHeaders(),
     });
 
-    const users = await res.json();
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data);
+
+      return;
+    }
+
+    const users = role === "admin" ? data : [data];
 
     const tbody = document.getElementById("usersTableBody");
 
     if (!tbody) {
       console.error("usersTableBody not found");
+
       return;
     }
 
@@ -57,34 +81,55 @@ async function loadUsers() {
     users.forEach((user) => {
       tbody.innerHTML += `
 
-        <tr>
+      <tr>
 
-          <td>${user.full_name || ""}</td>
-
-          <td>${user.email}</td>
-
-          <td>
-
-            <button 
-              class="btn-edit"
-              onclick="editUser(
-                '${user.id}',
-                '${user.full_name}',
-                '${user.email}'
-              )">
-              Edit
-            </button>
+        <td>
+          ${user.full_name || ""}
+        </td>
 
 
-            <button 
-              class="btn-delete"
-              onclick="deleteUser('${user.id}')">
-              Delete
-            </button>
+        <td>
+          ${user.email || ""}
+        </td>
 
-          </td>
 
-        </tr>
+        <td>
+
+
+        <button 
+          class="btn-edit"
+          onclick="
+          editUser(
+          '${user.id}',
+          '${user.full_name}',
+          '${user.email}'
+          )">
+
+          Edit
+
+        </button>
+
+
+
+        ${
+          role === "admin"
+            ? `
+          <button
+          class="btn-delete"
+          onclick="deleteUser('${user.id}')">
+
+          Delete
+
+          </button>
+          `
+            : ""
+        }
+
+
+        </td>
+
+
+      </tr>
 
       `;
     });
@@ -106,30 +151,52 @@ document.getElementById("userForm")?.addEventListener("submit", async (e) => {
 
   const password = document.getElementById("userPassword").value;
 
-  const method = isEditing ? "PUT" : "POST";
+  let url;
+  let method;
+  let body;
 
-  const url = isEditing ? `${API_URL}/${id}` : `${AUTH_URL}/register`;
+  // user update himself
 
-  const body = isEditing
-    ? {
-        full_name,
-        email,
-      }
-    : {
-        full_name,
-        email,
-        password,
-      };
+  if (role !== "admin") {
+    url = `${API_URL}/me`;
+
+    method = "PUT";
+
+    body = {
+      full_name,
+
+      email,
+    };
+  }
+
+  // admin
+  else {
+    method = isEditing ? "PUT" : "POST";
+
+    url = isEditing ? `${API_URL}/${id}` : `${AUTH_URL}/register`;
+
+    body = isEditing
+      ? {
+          full_name,
+          email,
+        }
+      : {
+          full_name,
+          email,
+          password,
+        };
+  }
 
   try {
     const res = await fetch(url, {
       method,
 
-      headers: isEditing
-        ? getAuthHeaders()
-        : {
-            "Content-Type": "application/json",
-          },
+      headers:
+        role !== "admin" || isEditing
+          ? getAuthHeaders()
+          : {
+              "Content-Type": "application/json",
+            },
 
       body: JSON.stringify(body),
     });
@@ -137,9 +204,7 @@ document.getElementById("userForm")?.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (res.ok) {
-      alert(
-        isEditing ? "User updated successfully" : "User created successfully",
-      );
+      alert("User saved successfully");
 
       resetForm();
 
@@ -148,9 +213,11 @@ document.getElementById("userForm")?.addEventListener("submit", async (e) => {
       alert(data.message || "Operation failed");
     }
   } catch (err) {
-    console.error("User operation error:", err);
+    console.error(err);
   }
-}); // EDIT USER
+});
+
+// EDIT USER
 
 function editUser(id, name, email) {
   isEditing = true;
@@ -168,7 +235,7 @@ function editUser(id, name, email) {
   document.getElementById("cancelEditBtn").style.display = "inline-block";
 }
 
-// RESET FORM
+// RESET
 
 function resetForm() {
   isEditing = false;
@@ -187,9 +254,13 @@ document.getElementById("cancelEditBtn")?.addEventListener("click", resetForm);
 // DELETE USER
 
 async function deleteUser(id) {
-  if (!confirm("Are you sure you want to delete this user?")) {
+  if (role !== "admin") {
+    alert("Access denied");
+
     return;
   }
+
+  if (!confirm("Are you sure you want to delete this user?")) return;
 
   try {
     const res = await fetch(`${API_URL}/${id}`, {
@@ -208,7 +279,7 @@ async function deleteUser(id) {
   }
 }
 
-// Start
+// START
 
 setupLogout();
 

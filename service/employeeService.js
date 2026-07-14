@@ -104,3 +104,7 @@ export const deleteEmployee = async (id) => {
 
   return await employeeRepos.deleteEmployee(id);
 };
+
+export const getEmployeeByUserId = async (user_id) => {
+  return await employeeRepos.getEmployeeByUserId(user_id);
+};

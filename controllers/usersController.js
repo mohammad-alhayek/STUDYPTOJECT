@@ -53,6 +53,23 @@ export const updateUser = catchAsync(async (req, res) => {
     message: req.__("USER_UPDATED_SUCCESS"),
   });
 });
+//git my user
+export const getMyUser = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.user.id);
+
+  res.status(200).json(user);
+});
+export const updateMyUser = catchAsync(async (req, res) => {
+  const id = req.user.id;
+
+  const user = req.body;
+
+  await userService.updateUser(id, user);
+
+  res.json({
+    message: req.__("USER_UPDATED_SUCCESS"),
+  });
+});
 
 // DELETE USER
 export const deleteUser = catchAsync(async (req, res) => {
