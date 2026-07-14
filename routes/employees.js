@@ -3,6 +3,7 @@ import express from "express";
 import { validate } from "../middlewares/validate.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { authorize } from "../middlewares/roleMiddleware.js";
+import { employeeLimiter } from "../middlewares/rateLimiter.js";
 
 import { employeeSchema } from "../validators/employeeValidator.js";
 
@@ -12,19 +13,24 @@ import {
   getEmployees,
   deleteEmployee,
   updateEmployee,
+  getMyEmployee,
+  updateMyEmployee,
 } from "../controllers/employeesController.js";
 
 const router = express.Router();
 
-// GET ALL EMPLOYEES
-// أي مستخدم مسجل دخول يستطيع يشوف
-router.get("/", authMiddleware, getEmployees);
+//  GET ALL EMPLOYEES
+router.get("/", authMiddleware, employeeLimiter, getEmployees);
+
+// USER CURRENT EMPLOYEE
+router.get("/me", authMiddleware, employeeLimiter, getMyEmployee);
+
+router.put("/me", authMiddleware, validate(employeeSchema), updateMyEmployee);
 
 // GET ONE EMPLOYEE
 router.get("/:id", authMiddleware, getEmployee);
 
 // ADD EMPLOYEE
-// فقط admin
 router.post(
   "/",
   authMiddleware,

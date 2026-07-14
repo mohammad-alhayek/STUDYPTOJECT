@@ -5,6 +5,8 @@ import {
   getUsers,
   deleteUser,
   updateUser,
+  getMyUser,
+  updateMyUser,
 } from "../controllers/usersController.js";
 
 import { authMiddleware } from "../middlewares/authMiddleware.js";
@@ -14,6 +16,10 @@ const router = express.Router();
 
 // GET ALL USERS
 router.get("/", authMiddleware, getUsers);
+
+//my user
+router.get("/me", authMiddleware, getMyUser);
+router.put("/me", authMiddleware, updateMyUser);
 
 // GET SINGLE USER
 router.get("/:id", authMiddleware, authorize("admin"), getUser);

@@ -1,5 +1,27 @@
 const BASE_URL = "http://localhost:3000/api/auth";
 
+// SAVE USER DATA FROM TOKEN
+function saveAuthData(accessToken, refreshToken) {
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
+
+  const payload = JSON.parse(atob(accessToken.split(".")[1]));
+
+  localStorage.setItem("role", payload.role);
+  localStorage.setItem("userId", payload.id);
+}
+
+// REDIRECT BASED ON ROLE
+function redirectByRole() {
+  const role = localStorage.getItem("role");
+
+  if (role === "admin") {
+    window.location.href = "/users";
+  } else {
+    window.location.href = "/employees";
+  }
+}
+
 // LOGIN
 document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -10,9 +32,11 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   try {
     const response = await fetch(`${BASE_URL}/login`, {
       method: "POST",
+
       headers: {
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify({
         email,
         password,
@@ -22,18 +46,17 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (response.ok) {
-      localStorage.setItem("accessToken", data.data.accessToken);
-
-      localStorage.setItem("refreshToken", data.data.refreshToken);
+      saveAuthData(data.data.accessToken, data.data.refreshToken);
 
       alert("Welcome back!");
 
-      window.location.href = "/employees";
+      redirectByRole();
     } else {
       alert(data.message || "Login failed");
     }
   } catch (err) {
     console.error(err);
+
     alert("Something went wrong");
   }
 });
@@ -45,15 +68,19 @@ document
     e.preventDefault();
 
     const full_name = document.getElementById("regName").value;
+
     const email = document.getElementById("regEmail").value;
+
     const password = document.getElementById("regPassword").value;
 
     try {
       const response = await fetch(`${BASE_URL}/register`, {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           full_name,
           email,
@@ -64,18 +91,17 @@ document
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("accessToken", data.data.accessToken);
-
-        localStorage.setItem("refreshToken", data.data.refreshToken);
+        saveAuthData(data.data.accessToken, data.data.refreshToken);
 
         alert("Registration successful!");
 
-        window.location.href = "/employees";
+        redirectByRole();
       } else {
         alert(data.message || "Registration failed");
       }
     } catch (err) {
       console.error(err);
+
       alert("Something went wrong");
     }
   });

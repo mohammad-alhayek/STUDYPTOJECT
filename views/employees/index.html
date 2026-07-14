@@ -2,16 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Employees Management</title>
+
     <link rel="stylesheet" href="/css/style.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="nav-links">
-        <a href="/users">Users</a>
-        <a href="/employees" class="active">Employees</a>
+        <a href="/users"> Users </a>
+
+        <a href="/employees" class="active"> Employees </a>
       </div>
 
       <button id="logoutBtn" class="btn-danger">Logout</button>
@@ -20,8 +24,9 @@
     <div class="main-content">
       <h2>Employees Management Panel</h2>
 
-      <!-- Add Employee -->
-      <div class="card">
+      <!-- ADD EMPLOYEE (ADMIN ONLY) -->
+
+      <div class="card" id="addEmployeeCard">
         <h3 id="formTitle">Add New Employee</h3>
 
         <form id="employeeForm">
@@ -74,7 +79,9 @@
         </form>
       </div>
 
-      <div class="card">
+      <!-- FILTER (ADMIN ONLY) -->
+
+      <div class="card" id="filterEmployeeCard">
         <h3>Filter Employees</h3>
 
         <input type="number" id="minSalary" placeholder="Min Salary" />
@@ -90,15 +97,21 @@
         <button id="clearFilterBtn" class="btn-secondary">Clear</button>
       </div>
 
-      <!-- Employees Table -->
+      <!-- EMPLOYEES TABLE -->
+
       <table class="data-table">
         <thead>
           <tr>
             <th>Full Name</th>
+
             <th>Email</th>
+
             <th>Department</th>
+
             <th>Salary</th>
+
             <th>Phone</th>
+
             <th>Actions</th>
           </tr>
         </thead>
