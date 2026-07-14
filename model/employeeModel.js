@@ -1,18 +1,20 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
 import User from "./userModel.js";
+import Company from "./companyModel.js";
+import Department from "./departmentModel.js";
 
 const Employee = sequelize.define(
   "Employee",
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
     user_id: {
-      type: DataTypes.STRING(36),
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     full_name: {
@@ -21,10 +23,6 @@ const Employee = sequelize.define(
     },
     phone: {
       type: DataTypes.STRING(20),
-      allowNull: true,
-    },
-    department: {
-      type: DataTypes.STRING(100),
       allowNull: true,
     },
     salary: {
@@ -39,6 +37,14 @@ const Employee = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    company_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    department_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
   },
   {
     tableName: "Employees",
@@ -47,9 +53,20 @@ const Employee = sequelize.define(
     updatedAt: false,
   },
 );
+
 Employee.belongsTo(User, {
   foreignKey: "user_id",
   targetKey: "id",
+});
+
+Employee.belongsTo(Company, {
+  foreignKey: "company_id",
+  as: "company",
+});
+
+Employee.belongsTo(Department, {
+  foreignKey: "department_id",
+  as: "department",
 });
 
 export default Employee;

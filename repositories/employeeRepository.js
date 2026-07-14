@@ -2,6 +2,8 @@
 
 import Employee from "../model/employeeModel.js";
 import User from "../model/userModel.js";
+import Company from "../model/companyModel.js"; // Import Company model
+import Department from "../model/departmentModel.js"; // Import Department model
 import { Op } from "sequelize";
 
 // GET EMPLOYEE BY USER ID
@@ -14,6 +16,14 @@ export const getEmployeeByUserId = async (user_id) => {
       {
         model: User,
         attributes: ["email"],
+      },
+      {
+        model: Company,
+        as: "company", // Fetch associated company details
+      },
+      {
+        model: Department,
+        as: "department", // Fetch associated department details
       },
     ],
   });
@@ -55,11 +65,18 @@ export const getAllEmployees = async (filters = {}) => {
 
   return await Employee.findAll({
     where,
-
     include: [
       {
         model: User,
         attributes: ["email"],
+      },
+      {
+        model: Company,
+        as: "company",
+      },
+      {
+        model: Department,
+        as: "department",
       },
     ],
   });
@@ -72,6 +89,14 @@ export const getEmployeeById = async (id) => {
       {
         model: User,
         attributes: ["email"],
+      },
+      {
+        model: Company,
+        as: "company",
+      },
+      {
+        model: Department,
+        as: "department",
       },
     ],
   });

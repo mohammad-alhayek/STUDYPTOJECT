@@ -13,7 +13,6 @@ export const getEmployees = catchAsync(async (req, res) => {
   };
 
   const employees = await employeeService.getEmployees(filters);
-
   res.status(200).json(employees);
 });
 
@@ -22,13 +21,9 @@ export const getEmployee = catchAsync(async (req, res) => {
   const id = req.params.id;
   const employee = await employeeService.getEmployeeById(id);
 
-  if (!employee) {
-    return res.status(404).json({
-      message: req.__("EMPLOYEE_NOT_FOUND"),
-    });
-  }
-
-  res.json(employee);
+  // Note: No manual 404 check needed here anymore because
+  // employeeService.getEmployeeById already throws an AppError if not found.
+  res.status(200).json(employee);
 });
 
 // ADD EMPLOYEE
@@ -65,12 +60,13 @@ export const deleteEmployee = catchAsync(async (req, res) => {
   });
 });
 
+// GET CURRENT LOGGED-IN EMPLOYEE
 export const getMyEmployee = catchAsync(async (req, res) => {
   const employee = await employeeService.getEmployeeByUserId(req.user.id);
-
   res.status(200).json(employee);
 });
 
+// UPDATE CURRENT LOGGED-IN EMPLOYEE
 export const updateMyEmployee = catchAsync(async (req, res) => {
   const employee = await employeeService.getEmployeeByUserId(req.user.id);
 

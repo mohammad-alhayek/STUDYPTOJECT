@@ -1,6 +1,8 @@
 import * as employeeRepos from "../repositories/employeeRepository.js";
 import AppError from "../utils/AppError.js";
 import * as userRepository from "../repositories/userRepository.js";
+import * as companyRepository from "../repositories/companyRepository.js"; // Import company repository
+import * as departmentRepository from "../repositories/departmentRepository.js"; // Import department repository
 import bcrypt from "bcrypt";
 
 // GET ALL EMPLOYEES
@@ -25,6 +27,22 @@ export const getEmployeeById = async (id) => {
 
 // ADD EMPLOYEE
 export const addEmployee = async (employee) => {
+  // Validate company existence
+  const companyExists = await companyRepository.getCompanyById(
+    employee.company_id,
+  );
+  if (!companyExists) {
+    throw new AppError("COMPANY_NOT_FOUND", 404);
+  }
+
+  // Validate department existence
+  const departmentExists = await departmentRepository.getDepartmentById(
+    employee.department_id,
+  );
+  if (!departmentExists) {
+    throw new AppError("DEPARTMENT_NOT_FOUND", 404);
+  }
+
   let user = await userRepository.getUserByEmail(employee.email);
 
   if (!user) {
@@ -54,10 +72,11 @@ export const addEmployee = async (employee) => {
     user_id: user.id,
     full_name: employee.full_name,
     phone: employee.phone,
-    department: employee.department,
     salary: employee.salary,
     hire_date: employee.hire_date,
     address: employee.address,
+    company_id: employee.company_id, // Map company UUID
+    department_id: employee.department_id, // Map department UUID
   });
 
   return {
@@ -69,9 +88,13 @@ export const addEmployee = async (employee) => {
       id: createdEmployee.id,
       full_name: createdEmployee.full_name,
       user_id: createdEmployee.user_id,
+      company_id: createdEmployee.company_id,
+      department_id: createdEmployee.department_id,
     },
   };
-}; // UPDATE EMPLOYEE
+};
+
+// UPDATE EMPLOYEE
 export const updateEmployee = async (id, employee) => {
   if (!id) {
     throw new AppError("EMPLOYEE_ID_REQUIRED", 400);
@@ -105,6 +128,7 @@ export const deleteEmployee = async (id) => {
   return await employeeRepos.deleteEmployee(id);
 };
 
+// GET EMPLOYEE BY USER ID
 export const getEmployeeByUserId = async (user_id) => {
   return await employeeRepos.getEmployeeByUserId(user_id);
 };
