@@ -1,23 +1,67 @@
 import Company from "../model/companyModel.js";
 
-// Create a new company
+// ============================
+// CREATE COMPANY
+// ============================
+
 export const createCompany = async (company) => {
   return await Company.create(company);
 };
 
-// Get company by ID
+// ============================
+// GET COMPANY BY ID
+// ============================
+
 export const getCompanyById = async (id) => {
   return await Company.findByPk(id);
 };
 
-// Get company by registration number
+// ============================
+// GET COMPANY BY REGISTRATION NUMBER
+// ============================
+
 export const getCompanyByRegNumber = async (regNumber) => {
   return await Company.findOne({
-    where: { registration_number: regNumber },
+    where: {
+      registration_number: regNumber,
+    },
   });
 };
 
-// Get all companies
+// ============================
+// GET ALL COMPANIES
+// ============================
+
 export const getAllCompanies = async () => {
   return await Company.findAll();
+};
+
+// ============================
+// UPDATE COMPANY
+// ============================
+
+export const updateCompany = async (id, companyData) => {
+  await Company.update(
+    companyData,
+
+    {
+      where: {
+        id,
+      },
+    },
+  );
+
+  return await Company.findByPk(id);
+};
+
+// ============================
+// DELETE COMPANY
+// ============================
+
+export const deleteCompany = async (id) => {
+  return await Company.destroy({
+    where: {
+      id,
+    },
+  });
 };

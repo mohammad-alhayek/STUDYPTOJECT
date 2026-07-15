@@ -34,3 +34,25 @@ export const createCompany = catchAsync(async (req, res) => {
     data: newCompany,
   });
 });
+
+// UPDATE COMPANY
+export const updateCompany = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  await companyService.updateCompany(id, req.body);
+
+  res.json({
+    message: req.__("COMPANY_UPDATED_SUCCESS"),
+  });
+});
+
+// DELETE COMPANY
+export const deleteCompany = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  await companyService.deleteCompany(id);
+
+  res.json({
+    message: req.__("COMPANY_DELETED_SUCCESS"),
+  });
+});

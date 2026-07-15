@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Departments Management</title>
+
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-links">
+        <a href="/users">Users</a>
+
+        <a href="/employees">Employees</a>
+
+        <a href="/companies">Companies</a>
+
+        <a href="/departments" class="active">Departments</a>
+      </div>
+
+      <button id="logoutBtn" class="btn-danger">Logout</button>
+    </nav>
+
+    <div class="main-content">
+      <h2>Departments Management Panel</h2>
+
+      <!-- Add / Edit Department -->
+
+      <div class="card">
+        <h3 id="formTitle">Add New Department</h3>
+
+        <form id="departmentForm">
+          <input type="hidden" id="departmentId" />
+
+          <div class="form-grid">
+            <input
+              type="text"
+              id="departmentName"
+              placeholder="Department Name"
+              required
+            />
+
+            <select id="companySelect" required>
+              <option value="">Select Company</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn" style="margin-top: 15px">
+            Save Department
+          </button>
+
+          <button
+            type="button"
+            id="cancelEditBtn"
+            class="btn-secondary"
+            style="display: none"
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+
+      <!-- Departments Table -->
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Department</th>
+
+            <th>Company</th>
+
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="departmentsTableBody"></tbody>
+      </table>
+    </div>
+
+    <script src="/js/departments.js" defer></script>
+  </body>
+</html>
+```

@@ -13,10 +13,26 @@ router.get(
   departmentsController.getDepartmentsByCompany,
 );
 
-// Get department by ID
+// GET ALL DEPARTMENTS
+router.get("/", authMiddleware, departmentsController.getDepartments);
+
+// GET DEPARTMENTS BY COMPANY
+router.get(
+  "/company/:companyId",
+  authMiddleware,
+  departmentsController.getDepartmentsByCompany,
+);
+
+// GET DEPARTMENT BY ID
 router.get("/:id", authMiddleware, departmentsController.getDepartment);
 
-// Create a new department
+// CREATE DEPARTMENT
 router.post("/", authMiddleware, departmentsController.createDepartment);
+
+// UPDATE DEPARTMENT
+router.put("/:id", authMiddleware, departmentsController.updateDepartment);
+
+// DELETE DEPARTMENT
+router.delete("/:id", authMiddleware, departmentsController.deleteDepartment);
 
 export default router;
