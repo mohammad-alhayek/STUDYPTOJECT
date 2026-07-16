@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const employeeSchema = Joi.object({
-  email: Joi.string().email().optional(),
+  email: Joi.string().email().required(),
 
   password: Joi.string().min(6).optional(),
 
@@ -24,9 +24,15 @@ export const employeeSchema = Joi.object({
       "any.required": "VALIDATION_PHONE_REQUIRED",
     }),
 
-  department: Joi.string().required().messages({
-    "any.required": "VALIDATION_DEPARTMENT_REQUIRED",
-    "string.empty": "VALIDATION_DEPARTMENT_REQUIRED",
+  // بدل department
+  company_id: Joi.string().uuid().required().messages({
+    "any.required": "COMPANY_ID_REQUIRED",
+    "string.guid": "INVALID_COMPANY_ID",
+  }),
+
+  department_id: Joi.string().uuid().required().messages({
+    "any.required": "DEPARTMENT_ID_REQUIRED",
+    "string.guid": "INVALID_DEPARTMENT_ID",
   }),
 
   salary: Joi.number().positive().required().messages({

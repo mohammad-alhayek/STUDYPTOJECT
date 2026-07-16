@@ -1,9 +1,27 @@
 const API_URL = "http://localhost:3000/api/employees";
+const COMPANY_URL = "http://localhost:3000/api/companies";
+const DEPARTMENT_URL = "http://localhost:3000/api/departments";
 const AUTH_URL = "http://localhost:3000/api/auth";
 
 const role = localStorage.getItem("role");
 
-// Logout
+let isEditing = false;
+
+// ===============================
+// AUTH HEADERS
+// ===============================
+
+function getHeaders() {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  };
+}
+
+// ===============================
+// LOGOUT
+// ===============================
+
 document.getElementById("logoutBtn")?.addEventListener("click", async () => {
   const refreshToken = localStorage.getItem("refreshToken");
 
@@ -26,19 +44,89 @@ document.getElementById("logoutBtn")?.addEventListener("click", async () => {
   window.location.href = "/login";
 });
 
-// GET EMPLOYEES
+// ===============================
+// LOAD COMPANIES
+// ===============================
+
+async function loadCompanies() {
+  try {
+    const res = await fetch(COMPANY_URL, {
+      headers: getHeaders(),
+    });
+
+    const companies = await res.json();
+
+    const select = document.getElementById("companySelect");
+
+    if (!select) return;
+
+    select.innerHTML = `<option value="">Select Company</option>`;
+
+    companies.forEach((company) => {
+      select.innerHTML += `
+        <option value="${company.id}">
+          ${company.name}
+        </option>
+      `;
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ===============================
+// LOAD DEPARTMENTS
+// ===============================
+
+async function loadDepartments(companyId) {
+  const select = document.getElementById("departmentSelect");
+
+  if (!select) return;
+
+  select.innerHTML = `<option value="">Select Department</option>`;
+
+  if (!companyId) return;
+
+  try {
+    const res = await fetch(`${DEPARTMENT_URL}/company/${companyId}`, {
+      headers: getHeaders(),
+    });
+
+    const departments = await res.json();
+
+    departments.forEach((department) => {
+      select.innerHTML += `
+        <option value="${department.id}">
+          ${department.name}
+        </option>
+      `;
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ===============================
+// COMPANY CHANGED
+// ===============================
+
+document.getElementById("companySelect")?.addEventListener("change", (e) => {
+  loadDepartments(e.target.value);
+});
+
+// ===============================
+// LOAD EMPLOYEES
+// ===============================
 
 async function loadEmployees() {
   try {
     let url = API_URL;
 
-    // USER GET OWN EMPLOYEE
     if (role !== "admin") {
       url = `${API_URL}/me`;
-    }
+    } else {
+      const params = new URLSearchParams();
 
-    // ADMIN FILTERS
-    else {
       const minSalary = document.getElementById("minSalary")?.value;
 
       const maxSalary = document.getElementById("maxSalary")?.value;
@@ -47,23 +135,13 @@ async function loadEmployees() {
 
       const endDate = document.getElementById("endDate")?.value;
 
-      const params = new URLSearchParams();
+      if (minSalary) params.append("minSalary", minSalary);
 
-      if (minSalary) {
-        params.append("minSalary", minSalary);
-      }
+      if (maxSalary) params.append("maxSalary", maxSalary);
 
-      if (maxSalary) {
-        params.append("maxSalary", maxSalary);
-      }
+      if (startDate) params.append("startDate", startDate);
 
-      if (startDate) {
-        params.append("startDate", startDate);
-      }
-
-      if (endDate) {
-        params.append("endDate", endDate);
-      }
+      if (endDate) params.append("endDate", endDate);
 
       if ([...params].length > 0) {
         url += `?${params.toString()}`;
@@ -71,16 +149,13 @@ async function loadEmployees() {
     }
 
     const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      headers: getHeaders(),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
       console.error(data);
-
       return;
     }
 
@@ -88,120 +163,97 @@ async function loadEmployees() {
 
     const tbody = document.getElementById("employeesTableBody");
 
-    if (!tbody) {
-      console.error("employeesTableBody not found");
-
-      return;
-    }
-
     tbody.innerHTML = "";
 
     employees.forEach((emp) => {
       tbody.innerHTML += `
 
-        <tr>
+      <tr>
 
-          <td>${emp.full_name || ""}</td>
+        <td>${emp.full_name}</td>
 
+        <td>${emp.User?.email || ""}</td>
 
-          <td>
-            ${emp.User?.email || ""}
-          </td>
+        <td>${emp.company?.name || ""}</td>
 
+        <td>${emp.department?.name || ""}</td>
 
-          <td>
-            ${emp.department || "N/A"}
-          </td>
+        <td>$${emp.salary || 0}</td>
 
+        <td>${emp.phone || ""}</td>
 
-          <td>
-            $${emp.salary || "0.00"}
-          </td>
-
-
-          <td>
-            ${emp.phone || "N/A"}
-          </td>
-
-
-
-          <td>
-
+        <td>
 
           ${
             role === "admin"
               ? `
-              <button
-                class="btn-delete"
-                onclick="deleteEmployee('${emp.id}')">
-                Delete
-              </button>
+            <button
+              class="btn-edit"
+              onclick="editEmployee('${emp.id}')">
+              Edit
+            </button>
+
+            <button
+              class="btn-delete"
+              onclick="deleteEmployee('${emp.id}')">
+              Delete
+            </button>
             `
               : `
-              <button
-                class="btn-edit"
-                onclick="editMyEmployee('${emp.id}')">
-                Edit
-              </button>
+            <button
+              class="btn-edit"
+              onclick="editMyEmployee('${emp.id}')">
+              Edit
+            </button>
             `
           }
 
+        </td>
 
-          </td>
-
-
-        </tr>
+      </tr>
 
       `;
     });
   } catch (err) {
-    console.error("Error loading employees:", err);
+    console.error(err);
   }
 }
 
-// FILTER BUTTON
+// ===============================
+// FILTER
+// ===============================
 
-document.getElementById("filterBtn")?.addEventListener("click", () => {
-  loadEmployees();
-});
-
-// CLEAR FILTER
+document.getElementById("filterBtn")?.addEventListener("click", loadEmployees);
 
 document.getElementById("clearFilterBtn")?.addEventListener("click", () => {
   document.getElementById("minSalary").value = "";
-
   document.getElementById("maxSalary").value = "";
-
   document.getElementById("startDate").value = "";
-
   document.getElementById("endDate").value = "";
 
   loadEmployees();
 });
-
-// ADD EMPLOYEE (ADMIN ONLY)
+// ===============================
+// ADD / UPDATE EMPLOYEE
+// ===============================
 
 document
   .getElementById("employeeForm")
   ?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (role !== "admin") {
-      alert("Access denied");
-
-      return;
-    }
+    const id = document.getElementById("employeeId").value;
 
     const employeeData = {
       full_name: document.getElementById("empFullName").value,
 
       email: document.getElementById("empEmail").value,
 
-      password: document.getElementById("empPassword").value,
-
       phone: document.getElementById("empPhone").value || null,
 
-      department: document.getElementById("empDept").value || null,
+      company_id: document.getElementById("companySelect").value,
+
+      department_id: document.getElementById("departmentSelect").value,
 
       salary: document.getElementById("empSalary").value
         ? parseFloat(document.getElementById("empSalary").value)
@@ -212,53 +264,148 @@ document
       address: document.getElementById("empAddress").value || null,
     };
 
+    if (!isEditing) {
+      employeeData.password = document.getElementById("empPassword").value;
+    }
+
+    const method = isEditing ? "PUT" : "POST";
+
+    const url = isEditing ? `${API_URL}/${id}` : API_URL;
+
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-
+      console.log(employeeData);
+      const res = await fetch(url, {
+        method,
+        headers: getHeaders(),
         body: JSON.stringify(employeeData),
       });
 
       const data = await res.json();
+      console.log(data);
 
       if (res.ok) {
-        alert("Employee Added Successfully");
+        alert(
+          isEditing
+            ? "Employee updated successfully"
+            : "Employee added successfully",
+        );
 
-        document.getElementById("employeeForm").reset();
+        resetForm();
 
         loadEmployees();
       } else {
-        alert(data.message || "Error");
+        alert(data.message || "Operation failed");
       }
     } catch (err) {
       console.error(err);
     }
   });
 
+// ===============================
+// EDIT EMPLOYEE
+// ===============================
+
+async function editEmployee(id) {
+  try {
+    const res = await fetch(`${API_URL}/${id}`, {
+      headers: getHeaders(),
+    });
+
+    const emp = await res.json();
+
+    if (!res.ok) return;
+
+    isEditing = true;
+
+    document.getElementById("formTitle").innerText = "Edit Employee";
+
+    document.getElementById("employeeId").value = emp.id;
+
+    document.getElementById("empFullName").value = emp.full_name;
+
+    document.getElementById("empEmail").value = emp.User?.email || "";
+
+    document.getElementById("empPhone").value = emp.phone || "";
+
+    document.getElementById("empSalary").value = emp.salary || "";
+
+    document.getElementById("empHireDate").value = emp.hire_date || "";
+
+    document.getElementById("empAddress").value = emp.address || "";
+
+    document.getElementById("empPassword").style.display = "none";
+
+    document.getElementById("companySelect").value = emp.company_id;
+
+    await loadDepartments(emp.company_id);
+
+    document.getElementById("departmentSelect").value = emp.department_id;
+
+    document.getElementById("cancelEditBtn").style.display = "inline-block";
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ===============================
+// EDIT MY PROFILE
+// ===============================
+
+async function editMyEmployee() {
+  try {
+    const res = await fetch(`${API_URL}/me`, {
+      headers: getHeaders(),
+    });
+
+    const emp = await res.json();
+
+    if (!res.ok) return;
+
+    isEditing = true;
+
+    document.getElementById("formTitle").innerText = "Edit My Profile";
+
+    document.getElementById("employeeId").value = emp.id;
+
+    document.getElementById("empFullName").value = emp.full_name;
+
+    document.getElementById("empEmail").value = emp.User?.email || "";
+
+    document.getElementById("empPhone").value = emp.phone || "";
+
+    document.getElementById("empSalary").value = emp.salary || "";
+
+    document.getElementById("empHireDate").value = emp.hire_date || "";
+
+    document.getElementById("empAddress").value = emp.address || "";
+
+    document.getElementById("empPassword").style.display = "none";
+
+    document.getElementById("companySelect").value = emp.company_id;
+
+    await loadDepartments(emp.company_id);
+
+    document.getElementById("departmentSelect").value = emp.department_id;
+
+    document.getElementById("cancelEditBtn").style.display = "inline-block";
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ===============================
 // DELETE EMPLOYEE
+// ===============================
 
 async function deleteEmployee(id) {
-  if (role !== "admin") {
-    alert("Access denied");
-
+  if (!confirm("Delete this employee?")) {
     return;
   }
-
-  if (!confirm("Delete this employee?")) return;
 
   try {
     const res = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
-
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      headers: getHeaders(),
     });
 
     if (res.ok) {
@@ -271,6 +418,39 @@ async function deleteEmployee(id) {
   }
 }
 
+// ===============================
+// RESET FORM
+// ===============================
+
+function resetForm() {
+  isEditing = false;
+
+  document.getElementById("formTitle").innerText = "Add New Employee";
+
+  document.getElementById("employeeForm").reset();
+
+  document.getElementById("employeeId").value = "";
+
+  document.getElementById("empPassword").style.display = "block";
+
+  document.getElementById("cancelEditBtn").style.display = "none";
+
+  document.getElementById("departmentSelect").innerHTML =
+    `<option value="">Select Department</option>`;
+}
+
+document.getElementById("cancelEditBtn")?.addEventListener("click", resetForm);
+
+// ===============================
 // START
+// ===============================
+
+if (role !== "admin") {
+  document.getElementById("addEmployeeCard").style.display = "none";
+
+  document.getElementById("filterEmployeeCard").style.display = "none";
+} else {
+  loadCompanies();
+}
 
 loadEmployees();
