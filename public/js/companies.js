@@ -1,735 +1,371 @@
 const API_URL = "http://localhost:3000/api/companies";
-
 const AUTH_URL = "http://localhost:3000/api/auth";
 
-
 let isEditing = false;
-
-
 
 // =========================
 // AUTH HEADERS
 // =========================
 
 function getAuthHeaders() {
-
   return {
-
     "Content-Type": "application/json",
 
-    Authorization:
-      `Bearer ${localStorage.getItem("accessToken")}`,
-
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
   };
-
 }
-
-
-
-
 
 // =========================
 // LOGOUT
 // =========================
 
-document
-.getElementById("logoutBtn")
-?.addEventListener("click", async () => {
-
-
-  const refreshToken =
-    localStorage.getItem("refreshToken");
-
-
+document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
 
   try {
-
-
     await fetch(`${AUTH_URL}/logout`, {
-
-
       method: "POST",
 
-
       headers: {
-
-
         "Content-Type": "application/json",
-
-
       },
 
-
       body: JSON.stringify({
-
         refreshToken,
-
       }),
-
-
     });
-
-
-
-  } catch(err) {
-
-
+  } catch (err) {
     console.error(err);
-
-
   }
-
-
-
 
   localStorage.clear();
 
-
-  window.location.href="/login";
-
-
+  window.location.href = "/login";
 });
-
-
-
-
-
-
-
-
 
 // =========================
 // GET ALL COMPANIES
 // =========================
 
-
 async function loadCompanies() {
-
-
   try {
-
-
-
     const res = await fetch(API_URL, {
+      method: "GET",
 
-
-      method:"GET",
-
-
-      headers:getAuthHeaders(),
-
-
+      headers: getAuthHeaders(),
     });
-
-
 
     const result = await res.json();
 
-
-
-    if(!res.ok){
-
-
+    if (!res.ok) {
       console.error(result);
 
-
       return;
-
-
     }
 
+    const companies = result.data || result;
 
+    const tbody = document.getElementById("companiesTableBody");
 
+    tbody.innerHTML = "";
 
-
-    const companies =
-
-      result.data || result;
-
-
-
-    const tbody =
-
-      document.getElementById(
-        "companiesTableBody"
-      );
-
-
-
-    if(!tbody){
-
-      console.error(
-        "companiesTableBody not found"
-      );
-
-      return;
-
-    }
-
-
-
-
-
-    tbody.innerHTML="";
-
-
-
-
-
-    companies.forEach(company => {
-
-
-
+    companies.forEach((company) => {
       tbody.innerHTML += `
 
 
-      <tr>
+<tr>
 
 
-        <td>
-          ${company.name || ""}
-        </td>
-
-
-
-        <td>
-          ${company.registration_number || ""}
-        </td>
+<td>
+${company.name || ""}
+</td>
 
 
 
-        <td>
-          ${company.address || ""}
-        </td>
+<td>
+${company.registration_number || ""}
+</td>
 
 
 
-        <td>
-          ${company.services || ""}
-        </td>
+<td>
+${company.address || ""}
+</td>
 
 
 
-        <td>
-
-
-          <button
-
-          class="btn-edit"
-
-          onclick="
-          editCompany(
-          '${company.id}',
-          '${company.name}',
-          '${company.registration_number}',
-          '${company.address || ""}',
-          '${company.services || ""}'
-          )">
-
-
-          Edit
-
-
-          </button>
+<td>
+${company.services || ""}
+</td>
 
 
 
+<td>
 
-          <button
+${
+  company.latitude && company.longitude
+    ? `
 
-          class="btn-delete"
+<button
+class="btn-secondary"
+onclick="openMap(
+'${company.latitude}',
+'${company.longitude}'
+)">
+🌍 Map
+</button>
 
-          onclick="
-          deleteCompany('${company.id}')
-          ">
-
-
-          Delete
-
-
-          </button>
-
-
-
-        </td>
-
-
-
-      </tr>
-
-
-
-      `;
-
-
-
-    });
-
-
-
-
-
-  } catch(err){
-
-
-    console.error(
-      "Error loading companies:",
-      err
-    );
-
-
-  }
-
-
+`
+    : ""
 }
 
 
 
+</td>
 
 
 
+<td>
 
 
+<button
+class="btn-edit"
+onclick="
+editCompany(
+'${company.id}',
+'${company.name}',
+'${company.registration_number}',
+'${company.address || ""}',
+'${company.services || ""}',
+'${company.latitude || ""}',
+'${company.longitude || ""}'
+)">
+Edit
+</button>
+
+
+
+<button
+class="btn-delete"
+onclick="
+deleteCompany('${company.id}')
+">
+Delete
+</button>
+
+
+
+</td>
+
+
+</tr>
+
+
+`;
+    });
+  } catch (err) {
+    console.error("Error loading companies:", err);
+  }
+}
 
 // =========================
 // ADD / UPDATE COMPANY
 // =========================
 
-
 document
-.getElementById("companyForm")
-?.addEventListener(
-"submit",
-async(e)=>{
+  .getElementById("companyForm")
+  ?.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
+    const id = document.getElementById("companyId").value;
 
-e.preventDefault();
+    const companyData = {
+      name: document.getElementById("companyName").value,
 
+      registration_number: document.getElementById("registrationNumber").value,
 
+      address: document.getElementById("companyAddress").value,
 
+      services: document.getElementById("companyServices").value,
 
-const id =
+      latitude: document.getElementById("companyLatitude").value
+        ? parseFloat(document.getElementById("companyLatitude").value)
+        : null,
 
-document.getElementById(
-"companyId"
-).value;
+      longitude: document.getElementById("companyLongitude").value
+        ? parseFloat(document.getElementById("companyLongitude").value)
+        : null,
+    };
 
+    const method = isEditing ? "PUT" : "POST";
 
+    const url = isEditing ? `${API_URL}/${id}` : API_URL;
 
+    try {
+      const res = await fetch(url, {
+        method,
 
+        headers: getAuthHeaders(),
 
-const companyData = {
+        body: JSON.stringify(companyData),
+      });
 
+      const data = await res.json();
 
-name:
+      if (res.ok) {
+        alert(
+          isEditing
+            ? "Company updated successfully"
+            : "Company created successfully",
+        );
 
-document.getElementById(
-"companyName"
-).value,
+        resetForm();
 
-
-
-registration_number:
-
-document.getElementById(
-"registrationNumber"
-).value,
-
-
-
-address:
-
-document.getElementById(
-"companyAddress"
-).value,
-
-
-
-services:
-
-document.getElementById(
-"companyServices"
-).value,
-
-
-};
-
-
-
-
-
-
-const method =
-
-isEditing
-
-?
-
-"PUT"
-
-:
-
-"POST";
-
-
-
-
-
-const url =
-
-isEditing
-
-?
-
-`${API_URL}/${id}`
-
-:
-
-API_URL;
-
-
-
-
-
-
-
-try {
-
-
-
-const res = await fetch(url,{
-
-
-
-method,
-
-
-
-headers:getAuthHeaders(),
-
-
-
-body:
-JSON.stringify(companyData),
-
-
-
-});
-
-
-
-
-
-const data =
-await res.json();
-
-
-
-
-
-if(res.ok){
-
-
-
-alert(
-
-isEditing
-
-?
-
-"Company updated successfully"
-
-:
-
-"Company created successfully"
-
-);
-
-
-
-
-resetForm();
-
-
-
-loadCompanies();
-
-
-
-
-}
-
-else {
-
-
-
-alert(
-data.message ||
-"Operation failed"
-);
-
-
-
-}
-
-
-
-
-
-}
-
-catch(err){
-
-
-console.error(err);
-
-
-}
-
-
-
-});
-
-
-
-
-
-
-
-
+        loadCompanies();
+      } else {
+        alert(data.message || "Operation failed");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  });
 
 // =========================
 // EDIT COMPANY
 // =========================
 
-
 function editCompany(
-id,
-name,
-registration_number,
-address,
-services
-){
+  id,
+  name,
+  registration_number,
+  address,
+  services,
+  latitude,
+  longitude,
+) {
+  isEditing = true;
 
+  document.getElementById("formTitle").innerText = "Edit Company";
 
+  document.getElementById("companyId").value = id;
 
-isEditing=true;
+  document.getElementById("companyName").value = name;
 
+  document.getElementById("registrationNumber").value = registration_number;
 
+  document.getElementById("companyAddress").value = address;
 
-document
-.getElementById("formTitle")
-.innerText="Edit Company";
+  document.getElementById("companyServices").value = services;
 
+  document.getElementById("companyLatitude").value = latitude;
 
+  document.getElementById("companyLongitude").value = longitude;
 
-
-document
-.getElementById("companyId")
-.value=id;
-
-
-
-
-document
-.getElementById("companyName")
-.value=name;
-
-
-
-
-document
-.getElementById("registrationNumber")
-.value=
-registration_number;
-
-
-
-
-document
-.getElementById("companyAddress")
-.value=
-address;
-
-
-
-
-document
-.getElementById("companyServices")
-.value=
-services;
-
-
-
-
-
-document
-.getElementById("cancelEditBtn")
-.style.display="inline-block";
-
-
-
+  document.getElementById("cancelEditBtn").style.display = "inline-block";
 }
-
-
-
-
-
-
-
-
 
 // =========================
 // RESET FORM
 // =========================
 
+function resetForm() {
+  isEditing = false;
 
-function resetForm(){
+  document.getElementById("companyForm").reset();
 
+  document.getElementById("companyId").value = "";
 
+  document.getElementById("formTitle").innerText = "Add New Company";
 
-isEditing=false;
-
-
-
-
-document
-.getElementById("formTitle")
-.innerText="Add New Company";
-
-
-
-
-document
-.getElementById("companyForm")
-.reset();
-
-
-
-
-document
-.getElementById("companyId")
-.value="";
-
-
-
-
-document
-.getElementById("cancelEditBtn")
-.style.display="none";
-
-
-
+  document.getElementById("cancelEditBtn").style.display = "none";
 }
 
-
-
-
-document
-.getElementById("cancelEditBtn")
-?.addEventListener(
-"click",
-resetForm
-);
-
-
-
-
-
-
-
-
+document.getElementById("cancelEditBtn")?.addEventListener("click", resetForm);
 
 // =========================
 // DELETE COMPANY
 // =========================
 
+async function deleteCompany(id) {
+  if (!confirm("Delete this company?")) return;
 
-async function deleteCompany(id){
+  try {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
 
+      headers: getAuthHeaders(),
+    });
 
+    if (res.ok) {
+      alert("Company deleted successfully");
 
-if(
-!confirm(
-"Delete this company?"
-)
-
-)
-
-return;
-
-
-
-
-
-
-try {
-
-
-
-const res = await fetch(
-
-`${API_URL}/${id}`,
-
-{
-
-
-method:"DELETE",
-
-
-headers:getAuthHeaders(),
-
-
+      loadCompanies();
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-);
+// =========================
+// GOOGLE MAP
+// =========================
 
+function openMap(lat, lng) {
+  window.open(
+    `https://www.google.com/maps?q=${lat},${lng}`,
 
-
-
-
-if(res.ok){
-
-
-alert(
-"Company deleted successfully"
-);
-
-
-
-loadCompanies();
-
-
-
+    "_blank",
+  );
 }
 
+// =========================
+// GET CURRENT LOCATION
+// =========================
 
+document.getElementById("getLocationBtn")?.addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
 
-}
+    return;
+  }
 
-catch(err){
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      document.getElementById("companyLatitude").value =
+        position.coords.latitude;
 
+      document.getElementById("companyLongitude").value =
+        position.coords.longitude;
 
-console.error(err);
+      alert("Location added successfully");
+    },
 
+    () => {
+      alert("Cannot get location");
+    },
+  );
+});
 
-}
+// =========================
+// OPEN MAP BUTTON
+// =========================
 
+document.getElementById("openMapBtn")?.addEventListener("click", () => {
+  const lat = document.getElementById("companyLatitude").value;
 
+  const lng = document.getElementById("companyLongitude").value;
 
-}
+  if (!lat || !lng) {
+    alert("Please select location first");
 
+    return;
+  }
 
-
-
-
-
-
-
+  openMap(lat, lng);
+});
 
 // =========================
 // START
 // =========================
-
 
 loadCompanies();

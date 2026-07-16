@@ -49,6 +49,11 @@ export const createCompany = async (companyData) => {
 
     services: companyData.services,
 
+    // Location
+    latitude: companyData.latitude,
+
+    longitude: companyData.longitude,
+
     user_id: companyData.user_id,
   });
 };
@@ -67,8 +72,6 @@ export const updateCompany = async (id, companyData) => {
   if (!company) {
     throw new AppError("COMPANY_NOT_FOUND", 404);
   }
-
-  // Check registration number duplicate
 
   if (
     companyData.registration_number &&
@@ -91,6 +94,11 @@ export const updateCompany = async (id, companyData) => {
     address: companyData.address,
 
     services: companyData.services,
+
+    // Location
+    latitude: companyData.latitude,
+
+    longitude: companyData.longitude,
   });
 };
 

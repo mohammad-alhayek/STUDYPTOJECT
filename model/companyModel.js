@@ -11,23 +11,39 @@ const Company = sequelize.define(
       primaryKey: true,
       allowNull: false,
     },
+
     name: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+
     registration_number: {
       type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
     },
+
     address: {
       type: DataTypes.STRING(500),
       allowNull: false,
     },
+
     services: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+
+    // Company Location
+    latitude: {
+      type: DataTypes.DECIMAL(10, 8),
+      allowNull: true,
+    },
+
+    longitude: {
+      type: DataTypes.DECIMAL(11, 8),
+      allowNull: true,
+    },
+
     user_id: {
       type: DataTypes.STRING(36),
       allowNull: false,
@@ -41,6 +57,7 @@ const Company = sequelize.define(
   },
 );
 
+// Company Owner
 Company.belongsTo(User, {
   foreignKey: "user_id",
   targetKey: "id",

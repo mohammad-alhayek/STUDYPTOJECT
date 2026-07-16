@@ -1,247 +1,125 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
-  <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Companies Management</title>
 
-  <title>Companies Management</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
 
-  <link rel="stylesheet" href="/css/style.css" />
-</head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-links">
+        <a href="/users"> Users </a>
 
+        <a href="/employees"> Employees </a>
 
-<body>
+        <a href="/companies" class="active"> Companies </a>
 
-
-<nav class="navbar">
-
-  <div class="nav-links">
-
-    <a href="/users">
-      Users
-    </a>
-
-
-    <a href="/employees">
-      Employees
-    </a>
-
-
-    <a href="/companies" class="active">
-      Companies
-    </a>
-
-
-    <a href="/departments">
-      Departments
-    </a>
-
-  </div>
-
-
-
-  <button id="logoutBtn" class="btn-danger">
-    Logout
-  </button>
-
-
-</nav>
-
-
-
-
-
-<div class="main-content">
-
-
-  <h2>
-    Companies Management Panel
-  </h2>
-
-
-
-
-
-  <!-- ADD / UPDATE COMPANY -->
-
-  <div class="card" id="addCompanyCard">
-
-
-    <h3 id="formTitle">
-      Add New Company
-    </h3>
-
-
-
-
-    <form id="companyForm">
-
-
-      <input 
-        type="hidden" 
-        id="companyId"
-      />
-
-
-
-      <div class="form-grid">
-
-
-
-        <input
-          type="text"
-          id="companyName"
-          placeholder="Company Name"
-          required
-        />
-
-
-
-        <input
-          type="text"
-          id="registrationNumber"
-          placeholder="Registration Number"
-          required
-        />
-
-
-
-        <input
-          type="text"
-          id="companyAddress"
-          placeholder="Address"
-        />
-
-
-
-        <input
-          type="text"
-          id="companyServices"
-          placeholder="Services"
-        />
-
-
-
+        <a href="/departments"> Departments </a>
       </div>
 
-
-
-
-
-      <button 
-        type="submit"
-        class="btn"
-        style="margin-top:15px">
-
-        Save Company
-
-      </button>
-
-
-
-
-
-      <button
-        type="button"
-        id="cancelEditBtn"
-        class="btn-secondary"
-        style="display:none">
-
-        Cancel
-
-      </button>
-
-
-
-
-    </form>
-
-
-
-  </div>
-
-
-
-
-
-
-
-
-  <!-- COMPANIES TABLE -->
-
-
-  <table class="data-table">
-
-
-    <thead>
-
-
-      <tr>
-
-
-        <th>
-          Company Name
-        </th>
-
-
-        <th>
-          Registration Number
-        </th>
-
-
-        <th>
-          Address
-        </th>
-
-
-        <th>
-          Services
-        </th>
-
-
-        <th>
-          Actions
-        </th>
-
-
-      </tr>
-
-
-    </thead>
-
-
-
-
-
-    <tbody id="companiesTableBody">
-
-
-    </tbody>
-
-
-
-
-  </table>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-<script src="/js/companies.js" defer></script>
-
-
-
-</body>
-
-
+      <button id="logoutBtn" class="btn-danger">Logout</button>
+    </nav>
+
+    <div class="main-content">
+      <h2>Companies Management Panel</h2>
+
+      <!-- ADD / UPDATE COMPANY -->
+
+      <div class="card">
+        <h3 id="formTitle">Add New Company</h3>
+
+        <form id="companyForm">
+          <input type="hidden" id="companyId" />
+
+          <div class="form-grid">
+            <input
+              type="text"
+              id="companyName"
+              placeholder="Company Name"
+              required
+            />
+
+            <input
+              type="text"
+              id="registrationNumber"
+              placeholder="Registration Number"
+              required
+            />
+
+            <input type="text" id="companyAddress" placeholder="Address" />
+
+            <input type="text" id="companyServices" placeholder="Services" />
+
+            <!-- LOCATION -->
+
+            <input
+              type="number"
+              step="any"
+              id="companyLatitude"
+              placeholder="Latitude"
+            />
+
+            <input
+              type="number"
+              step="any"
+              id="companyLongitude"
+              placeholder="Longitude"
+            />
+          </div>
+
+          <div style="margin-top: 15px">
+            <button type="button" id="getLocationBtn" class="btn-secondary">
+              📍 Get Current Location
+            </button>
+
+            <button type="button" id="openMapBtn" class="btn-secondary">
+              🌍 Open Google Maps
+            </button>
+          </div>
+
+          <button type="submit" class="btn" style="margin-top: 15px">
+            Save Company
+          </button>
+
+          <button
+            type="button"
+            id="cancelEditBtn"
+            class="btn-secondary"
+            style="display: none"
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+
+      <!-- COMPANIES TABLE -->
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Company Name</th>
+
+            <th>Registration Number</th>
+
+            <th>Address</th>
+
+            <th>Services</th>
+
+            <th>Location</th>
+
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="companiesTableBody"></tbody>
+      </table>
+    </div>
+
+    <script src="/js/companies.js" defer></script>
+  </body>
 </html>
