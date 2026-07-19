@@ -18,13 +18,20 @@ export const getCompany = catchAsync(async (req, res) => {
 });
 
 // CREATE COMPANY
+// CREATE COMPANY
 export const createCompany = catchAsync(async (req, res) => {
   const companyData = {
     name: req.body.name,
     registration_number: req.body.registration_number,
     address: req.body.address,
     services: req.body.services,
-    user_id: req.user.id, // Set the current logged-in user (admin) as owner
+
+    // Location
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
+
+    // Current logged-in user
+    user_id: req.user.id,
   };
 
   const newCompany = await companyService.createCompany(companyData);
@@ -34,7 +41,6 @@ export const createCompany = catchAsync(async (req, res) => {
     data: newCompany,
   });
 });
-
 // UPDATE COMPANY
 export const updateCompany = catchAsync(async (req, res) => {
   const id = req.params.id;
